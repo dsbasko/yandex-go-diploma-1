@@ -5,11 +5,16 @@ import (
 	"time"
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/config"
 )
 
 func Run() error {
-	// TODO указать переменную окружения из конфига
-	log, err := logger.NewLogger("dev", "auth")
+	err := config.Init()
+	if err != nil {
+		return fmt.Errorf("config.Init: %w", err)
+	}
+
+	log, err := logger.NewLogger(config.GetEnv(), config.GetServiceName())
 	if err != nil {
 		return fmt.Errorf("logger.NewLogger: %w", err)
 	}

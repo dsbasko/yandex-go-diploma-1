@@ -35,6 +35,7 @@ services:
       - yandex-diploma-1
     environment:
       ENV: ${ENV}
+      SERVICE_NAME: ${AUTH_CONTAINER_NAME}
 
   planner:
     container_name: ${PLANNER_CONTAINER_NAME}
