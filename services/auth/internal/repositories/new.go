@@ -10,5 +10,8 @@ import (
 
 func NewRepository(ctx context.Context) (domain.Repository, error) {
 	repo, err := postgresql.NewRepository(ctx)
-	return repo, fmt.Errorf("postgresql.NewRepository: %w", err)
+	if err != nil {
+		return nil, fmt.Errorf("postgresql.NewRepository: %w", err)
+	}
+	return repo, nil
 }
