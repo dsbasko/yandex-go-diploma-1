@@ -308,6 +308,7 @@ flowchart LR
 | `make start-dev`  | Запуск проекта в Development режиме |
 | `make start-prod` | Запуск проекта в Production режиме  |
 | `make stop`       | Останавливает все сервисы           |
+| `make lint`       | Линтинг всего проекта               |
 
 Также для запуска проекта потребуется создать файл `env/.env`.
 Шаблон файла можно найти по пути `env/template.env`.
