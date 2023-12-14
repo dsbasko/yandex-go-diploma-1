@@ -7,6 +7,7 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/config"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/controllers/rest"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/repositories"
 )
 
 func Run() error {
@@ -22,6 +23,13 @@ func Run() error {
 	if err != nil {
 		return fmt.Errorf("logger.NewLogger: %w", err)
 	}
+
+	repo, err := repositories.NewRepository(ctx)
+	if err != nil {
+		return fmt.Errorf("repositories.NewRepository: %w", err)
+	}
+	// TODO Don't forget to remove this нахрен
+	_ = repo
 
 	// HTTP REST триггер
 	errRestCh := make(chan error)

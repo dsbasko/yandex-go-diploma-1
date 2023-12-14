@@ -25,7 +25,7 @@ type config struct {
 	PsqlUser     string `env:"PSQL_USER"`
 	PsqlPass     string `env:"PSQL_PASS"`
 	PsqlDB       string `env:"PSQL_DB"`
-	PsqlMaxPools string `env:"PSQL_MAX_POOLS"`
+	PsqlMaxPools int32  `env:"PSQL_MAX_POOLS"`
 }
 
 var (
@@ -70,6 +70,9 @@ func GetRmqConnectingString() string {
 		cfg.RmqHost,
 		cfg.RmqPort,
 	)
+}
+func GetPsqlMaxPools() int32 {
+	return cfg.PsqlMaxPools
 }
 
 func GetPsqlConnectingString() string {
