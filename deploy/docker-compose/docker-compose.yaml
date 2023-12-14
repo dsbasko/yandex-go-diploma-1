@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+  nginx:
+    container_name: ${NGINX_CONTAINER_NAME}
+    extends:
+      file: ../../nginx/docker-compose/${ENV}.docker-compose.yaml
+      service: nginx
+    networks:
+      - yandex-diploma-1
+    ports:
+      - '${NGINX_PORT_HTTP}:80'
+    env_file:
+      - ../../env/.env
+
+  rmq:
+    container_name: ${RMQ_CONTAINER_NAME}
+    extends:
+      file: ../../brokers/rabbitmq/docker-compose/${ENV}.docker-compose.yaml
+      service: rmq
+    networks:
+      - yandex-diploma-1
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RMQ_AUTH_USER}
+      RABBITMQ_DEFAULT_PASS: ${RMQ_AUTH_PASS}
+
+  auth:
+    container_name: ${AUTH_CONTAINER_NAME}
+    env_file:
+      - ../../env/.env
+    extends:
+      file: ../../services/auth/deploy/docker-compose/${ENV}.docker-compose.yaml
+      service: auth
+    networks:
+      - yandex-diploma-1
+    environment:
+      ENV: ${ENV}
+
+  planner:
+    container_name: ${PLANNER_CONTAINER_NAME}
+    env_file:
+      - ../../env/.env
+    extends:
+      file: ../../services/planner/deploy/docker-compose/${ENV}.docker-compose.yaml
+      service: planner
+    networks:
+      - yandex-diploma-1
+    environment:
+      ENV: ${ENV}
+
+  notification:
+    container_name: ${NOTIFICATION_CONTAINER_NAME}
+    env_file:
+      - ../../env/.env
+    extends:
+      file: ../../services/notification/deploy/docker-compose/${ENV}.docker-compose.yaml
+      service: notification
+    networks:
+      - yandex-diploma-1
+    environment:
+      ENV: ${ENV}
+
+networks:
+  yandex-diploma-1:
+    driver: bridge

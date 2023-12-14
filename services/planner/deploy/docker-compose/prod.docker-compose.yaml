@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  planner:
+    restart: always
+    build:
+      context: ../../../../
+      dockerfile: ./services/planner/deploy/docker/prod.Dockerfile

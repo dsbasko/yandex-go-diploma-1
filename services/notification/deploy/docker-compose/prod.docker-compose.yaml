@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  notification:
+    restart: always
+    build:
+      context: ../../../../
+      dockerfile: ./services/notification/deploy/docker/prod.Dockerfile

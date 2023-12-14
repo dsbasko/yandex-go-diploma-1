@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  notification:
+    restart: "no"
+    build:
+      context: ../../../../
+      dockerfile: ./services/notification/deploy/docker/dev.Dockerfile
+    volumes:
+      - ../../:/app
+      - ../../../../core:/core
