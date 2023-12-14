@@ -14,6 +14,18 @@ type config struct {
 
 	RestReadTimeout  int `env:"REST_READ_TIMEOUT"`
 	RestWriteTimeout int `env:"REST_WRITE_TIMEOUT"`
+
+	RmqHost     string `env:"RMQ_HOST"`
+	RmqPort     string `env:"RMQ_PORT"`
+	RmqAuthUser string `env:"RMQ_AUTH_USER"`
+	RmqAuthPass string `env:"RMQ_AUTH_PASS"`
+
+	PsqlHost     string `env:"PSQL_HOST"`
+	PsqlPort     string `env:"PSQL_PORT"`
+	PsqlUser     string `env:"PSQL_USER"`
+	PsqlPass     string `env:"PSQL_PASS"`
+	PsqlDB       string `env:"PSQL_DB"`
+	PsqlMaxPools string `env:"PSQL_MAX_POOLS"`
 }
 
 var (
@@ -48,4 +60,25 @@ func GetRestReadTimeout() time.Duration {
 
 func GetRestWriteTimeout() time.Duration {
 	return time.Duration(cfg.RestWriteTimeout) * time.Millisecond
+}
+
+func GetRmqConnectingString() string {
+	return fmt.Sprintf(
+		"amqp://%s:%s@%s:%s/",
+		cfg.RmqAuthUser,
+		cfg.RmqAuthPass,
+		cfg.RmqHost,
+		cfg.RmqPort,
+	)
+}
+
+func GetPsqlConnectingString() string {
+	return fmt.Sprintf(
+		"postgresql://%s:%s@%s:%s/%s",
+		cfg.PsqlUser,
+		cfg.PsqlPass,
+		cfg.PsqlHost,
+		cfg.PsqlPort,
+		cfg.PsqlDB,
+	)
 }

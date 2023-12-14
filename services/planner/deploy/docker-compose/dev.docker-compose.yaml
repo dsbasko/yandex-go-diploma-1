@@ -9,3 +9,10 @@ services:
     volumes:
       - ../../:/app
       - ../../../../core:/core
+
+  planner_db:
+    build:
+      context: ../../
+      dockerfile: ./deploy/docker/psql.Dockerfile
+    ports:
+      - "${PLANNER_PSQL_PORT}:${PLANNER_PSQL_PORT}"

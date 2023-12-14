@@ -9,3 +9,10 @@ services:
     volumes:
       - ../../:/app
       - ../../../../core:/core
+
+  auth_db:
+    build:
+      context: ../../
+      dockerfile: ./deploy/docker/psql.Dockerfile
+    ports:
+      - "${AUTH_PSQL_PORT}:${AUTH_PSQL_PORT}"

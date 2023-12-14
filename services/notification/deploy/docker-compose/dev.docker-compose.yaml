@@ -9,3 +9,10 @@ services:
     volumes:
       - ../../:/app
       - ../../../../core:/core
+
+  notification_db:
+    build:
+      context: ../../
+      dockerfile: ./deploy/docker/psql.Dockerfile
+    ports:
+      - "${NOTIFICATION_PSQL_PORT}:${NOTIFICATION_PSQL_PORT}"
