@@ -12,13 +12,16 @@ import (
 type Repository interface {
 	Ping(ctx context.Context) error
 	CreateOnce(ctx context.Context, dto *api.RegisterRequestV1) (*RepositoryAccountEntity, error)
+	FindByUsername(ctx context.Context, username string) (*RepositoryAccountEntity, error)
 }
 
 type RepositoryAccountEntity struct {
-	ID        string        `json:"id"`
-	Username  string        `json:"username"`
-	Password  string        `json:"password"`
-	LastLogin time.Duration `json:"last_login"`
-	CreatedAt time.Duration `json:"created_at"`
-	UpdatedAt time.Duration `json:"updated_at"`
+	ID        string    `json:"id"`
+	Username  string    `json:"username"`
+	Password  string    `json:"password"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+	LastLogin time.Time `json:"last_login"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

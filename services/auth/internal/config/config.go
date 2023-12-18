@@ -9,8 +9,10 @@ import (
 )
 
 type config struct {
-	Env         string `env:"ENV"`
-	ServiceName string `env:"SERVICE_NAME"`
+	Env           string `env:"ENV"`
+	ServiceName   string `env:"SERVICE_NAME"`
+	JwtSecretKey  string `env:"JWT_SECRET_KEY"`
+	JwtExpMinutes int    `env:"JWT_EXP_MINUTES"`
 
 	RestReadTimeout  int `env:"REST_READ_TIMEOUT"`
 	RestWriteTimeout int `env:"REST_WRITE_TIMEOUT"`
@@ -52,6 +54,14 @@ func GetEnv() string {
 
 func GetServiceName() string {
 	return cfg.ServiceName
+}
+
+func GetJwtSecretKey() string {
+	return cfg.JwtSecretKey
+}
+
+func GetJwtExp() time.Duration {
+	return time.Duration(cfg.JwtExpMinutes) * time.Minute
 }
 
 func GetRestReadTimeout() time.Duration {

@@ -51,6 +51,21 @@ func (mr *MockRepositoryMockRecorder) CreateOnce(arg0, arg1 interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOnce", reflect.TypeOf((*MockRepository)(nil).CreateOnce), arg0, arg1)
 }
 
+// FindByUsername mocks base method.
+func (m *MockRepository) FindByUsername(arg0 context.Context, arg1 string) (*domain.RepositoryAccountEntity, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindByUsername", arg0, arg1)
+	ret0, _ := ret[0].(*domain.RepositoryAccountEntity)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindByUsername indicates an expected call of FindByUsername.
+func (mr *MockRepositoryMockRecorder) FindByUsername(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUsername", reflect.TypeOf((*MockRepository)(nil).FindByUsername), arg0, arg1)
+}
+
 // Ping mocks base method.
 func (m *MockRepository) Ping(arg0 context.Context) error {
 	m.ctrl.T.Helper()

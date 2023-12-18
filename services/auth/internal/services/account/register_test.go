@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/repositories"
@@ -37,6 +38,13 @@ func TestService_Register(t *testing.T) {
 			mockConfig: func() {
 				repo.EXPECT().CreateOnce(gomock.Any(), gomock.Any()).Return(&domain.RepositoryAccountEntity{ID: "42"}, nil)
 			},
+		},
+		{
+			name:       "Empty DTO",
+			dto:        nil,
+			wantRes:    nil,
+			wantErr:    ErrArgumentsNotFilled,
+			mockConfig: func() {},
 		},
 		{
 			name: "Short username",
@@ -79,12 +87,13 @@ func TestService_Register(t *testing.T) {
 			mockConfig: func() {},
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mockConfig()
 			response, err := service.Register(ctx, tt.dto)
-			if err != nil {
-				assert.ErrorIs(t, err, tt.wantErr)
+			if err != nil || tt.wantErr != nil {
+				assert.Equal(t, lib.ErrorsUnwrap(err), tt.wantErr)
 			} else {
 				assert.Equal(t, response, tt.wantRes)
 			}

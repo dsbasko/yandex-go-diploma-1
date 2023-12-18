@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
-	"golang.org/x/crypto/bcrypt"
 )
 
 const (
@@ -16,6 +15,10 @@ const (
 )
 
 func (s *Service) Register(ctx context.Context, dto *api.RegisterRequestV1) (*api.RegisterResponseV1, error) {
+	if ctx == nil || dto == nil {
+		return nil, ErrArgumentsNotFilled
+	}
+
 	switch {
 	case len(dto.Username) < UsernameMinLength:
 		return nil, ErrUsernameMinLength
@@ -28,11 +31,11 @@ func (s *Service) Register(ctx context.Context, dto *api.RegisterRequestV1) (*ap
 	default:
 	}
 
-	password, err := bcrypt.GenerateFromPassword([]byte(dto.Password), bcrypt.DefaultCost)
+	passHash, err := passwordEncode(dto.Password)
 	if err != nil {
-		return nil, fmt.Errorf("bcrypt.GenerateFromPassword: %w", err)
+		return nil, fmt.Errorf("passwordEncode: %w", err)
 	}
-	dto.Password = string(password)
+	dto.Password = passHash
 
 	createdUser, err := s.repo.CreateOnce(ctx, dto)
 	if err != nil {

@@ -23,6 +23,7 @@ func Inject(
 
 	handler.Get("/ping", h.Ping)
 	handler.Post("/register", h.Register)
+	handler.Post("/login", h.Login)
 
 	routes := handler.Routes()
 	for _, route := range routes {

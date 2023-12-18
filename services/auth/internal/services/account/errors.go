@@ -1,10 +1,13 @@
 package account
 
 import (
+	"errors"
 	"fmt"
 )
 
 var (
+	ErrArgumentsNotFilled = errors.New("not all arguments are filled in")
+
 	ErrUsernameMinLength = fmt.Errorf("username must be at least %v characters long", UsernameMinLength)
 	ErrUsernameMaxLength = fmt.Errorf("username cannot exceed a maximum length of %v characters", UsernameMaxLength)
 
