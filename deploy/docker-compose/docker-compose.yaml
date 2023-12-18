@@ -47,6 +47,7 @@ services:
       PSQL_PASS: ${AUTH_PSQL_PASS}
       PSQL_DB: ${AUTH_PSQL_DB}
       PSQL_MAX_POOLS: ${AUTH_PSQL_MAX_POOLS}
+      RMQ_HOST: ${RMQ_CONTAINER_NAME}
 
   auth_db:
     container_name: ${AUTH_PSQL_CONTAINER_NAME}

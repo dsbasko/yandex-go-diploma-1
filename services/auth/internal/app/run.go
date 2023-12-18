@@ -8,6 +8,7 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/config"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/controllers/rest"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/repositories"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/services/account"
 )
 
 func Run() error {
@@ -28,13 +29,13 @@ func Run() error {
 	if err != nil {
 		return fmt.Errorf("repositories.NewRepository: %w", err)
 	}
-	// TODO Don't forget to remove this нахрен
-	_ = repo
+
+	accountService := account.NewService(log, repo)
 
 	// HTTP REST триггер
 	errRestCh := make(chan error)
 	go func() {
-		if err = rest.RunServer(ctx, log); err != nil {
+		if err = rest.RunServer(ctx, log, accountService); err != nil {
 			errRestCh <- fmt.Errorf("rest.Run: %v", err)
 		}
 	}()

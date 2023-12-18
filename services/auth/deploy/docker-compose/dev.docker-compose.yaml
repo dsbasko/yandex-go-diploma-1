@@ -9,6 +9,8 @@ services:
     volumes:
       - ../../:/app
       - ../../../../core:/core
+    depends_on:
+      - auth_db
 
   auth_db:
     build:

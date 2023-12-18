@@ -1,0 +1,11 @@
+### /ping
+GET http://localhost/auth/ping
+
+### /register
+POST http://localhost/auth/register
+Content-Type: application/json
+
+{
+  "username": "login",
+  "password": "password"
+}

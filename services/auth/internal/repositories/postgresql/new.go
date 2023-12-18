@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Masterminds/squirrel"
 	"github.com/dsbasko/yandex-go-diploma-1/core/postgresql"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/config"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
@@ -11,12 +12,13 @@ import (
 )
 
 type Repository struct {
-	conn *pgxpool.Pool
+	conn    *pgxpool.Pool
+	builder squirrel.StatementBuilderType
 }
 
 var _ domain.Repository = (*Repository)(nil)
 
-func NewRepository(ctx context.Context) (domain.Repository, error) {
+func NewRepository(ctx context.Context) (*Repository, error) {
 	conn, err := postgresql.Connect(ctx, config.GetPsqlConnectingString(), postgresql.Config{
 		MaxConns: config.GetPsqlMaxPools(),
 	})
@@ -28,8 +30,11 @@ func NewRepository(ctx context.Context) (domain.Repository, error) {
 		return nil, fmt.Errorf("conn.Ping: %w", err)
 	}
 
-	repo := &Repository{
-		conn: conn,
+	builder := squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar)
+
+	repo := Repository{
+		conn:    conn,
+		builder: builder,
 	}
 
 	if err = repo.TableInit(ctx); err != nil {
@@ -48,9 +53,10 @@ func (r *Repository) TableInit(ctx context.Context) error {
 		CREATE TABLE IF NOT EXISTS accounts (
 		    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 			username VARCHAR(255) UNIQUE,
-			password VARCHAR(255),
-		    last_login TIMESTAMPTZ,
-		    created_at TIMESTAMPTZ DEFAULT NOW()
+			password VARCHAR(255) NOT NULL,
+		    last_login TIMESTAMPTZ DEFAULT NOW(),
+		    created_at TIMESTAMPTZ DEFAULT NOW(),
+		    updated_at TIMESTAMPTZ DEFAULT NOW()
 		)
 	`); err != nil {
 		return fmt.Errorf("conn.Exec: create table \"accounts\": %w", err)

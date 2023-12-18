@@ -8,13 +8,14 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/config"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/controllers/rest/handler"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/controllers/rest/middleware"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/services/account"
 	"github.com/go-chi/chi/v5"
 )
 
-func RunServer(ctx context.Context, log *logger.Logger) error {
+func RunServer(ctx context.Context, log *logger.Logger, accountService *account.Service) error {
 	handlers := chi.NewRouter()
 	middleware.Inject(log, handlers)
-	handler.Inject(log, handlers)
+	handler.Inject(log, handlers, accountService)
 
 	server := http.Server{
 		Addr:         ":3000",
