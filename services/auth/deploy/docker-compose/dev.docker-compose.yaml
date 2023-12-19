@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  auth:
+    restart: "no"
+    build:
+      context: ../../../../
+      dockerfile: ./services/auth/deploy/docker/dev.Dockerfile
+    volumes:
+      - ../../:/app
+      - ../../../../core:/core
+    depends_on:
+      - auth_db
+
+  auth_db:
+    build:
+      context: ../../
+      dockerfile: ./deploy/docker/psql.Dockerfile
+    ports:
+      - "${AUTH_PSQL_PORT}:${AUTH_PSQL_PORT}"

@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  notification:
+    restart: always
+    build:
+      context: ../../../../
+      dockerfile: ./services/notification/deploy/docker/prod.Dockerfile
+
+  notification_db:
+    build:
+      context: ../../
+      dockerfile: ./deploy/docker/psql.Dockerfile

@@ -1,0 +1,22 @@
+### /ping Health check
+GET http://localhost/auth/ping
+
+### /register Регистрация
+POST http://localhost/auth/register
+Content-Type: application/json
+
+{
+  "username": "login",
+  "password": "password",
+  "first_name": "first name",
+  "last_name": "last name"
+}
+
+### /login Авторизация
+POST http://localhost/auth/login
+Content-Type: application/json
+
+{
+  "username": "login",
+  "password": "password"
+}
