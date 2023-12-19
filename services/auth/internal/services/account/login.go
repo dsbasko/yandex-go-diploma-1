@@ -18,7 +18,7 @@ func (s *Service) Login(ctx context.Context, dto *api.AuthRequestV1) (*api.AuthR
 		return nil, fmt.Errorf("repo.FindByUsername: %w", err)
 	}
 
-	if err = passwordCompare(dto.Password, foundUser.Password); err != nil {
+	if err = passwordCompare(foundUser.Password, dto.Password); err != nil {
 		return nil, fmt.Errorf("bcrypt.CompareHashAndPassword: %w", err)
 	}
 

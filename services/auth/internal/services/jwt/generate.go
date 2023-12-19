@@ -6,16 +6,9 @@ import (
 
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/config"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 	"github.com/golang-jwt/jwt/v4"
 )
-
-type Claims struct {
-	jwt.RegisteredClaims
-	UserID    string `json:"user_id"`
-	Username  string `json:"username"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-}
 
 func (s *Service) Generate(
 	accountEntity *domain.RepositoryAccountEntity,
@@ -29,10 +22,12 @@ func (s *Service) Generate(
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(config.GetJwtExp())),
 		},
-		UserID:    accountEntity.ID,
-		Username:  accountEntity.Username,
-		FirstName: accountEntity.FirstName,
-		LastName:  accountEntity.LastName,
+		JWTPayload: &api.JWTPayloadV1{
+			UserID:    accountEntity.ID,
+			Username:  accountEntity.Username,
+			FirstName: accountEntity.FirstName,
+			LastName:  accountEntity.LastName,
+		},
 	})
 
 	tokenString, err := token.SignedString([]byte(config.GetJwtSecretKey()))

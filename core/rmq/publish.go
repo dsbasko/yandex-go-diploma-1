@@ -7,6 +7,10 @@ import (
 	"github.com/rabbitmq/amqp091-go"
 )
 
+/*
+Отправка сообщения
+*/
+
 type PublisherConfig struct {
 	Exchange  string
 	Key       string
@@ -34,7 +38,11 @@ func (c *Connector) Publish(
 	)
 }
 
-type SimplePublisherConfig struct {
+/*
+Отправка сообщения и ожидание ответа
+*/
+
+type SimplePublisherAndWaitResponseConfig struct {
 	Exchange  string
 	Key       string
 	Mandatory bool
@@ -43,7 +51,7 @@ type SimplePublisherConfig struct {
 
 func (c *Connector) SimplePublishAndWaitResponse(
 	ctx context.Context,
-	cfgPublisher *SimplePublisherConfig,
+	cfgPublisher *SimplePublisherAndWaitResponseConfig,
 ) (<-chan amqp091.Delivery, func(), error) {
 	replyQueue, err := c.QueueDeclare(&QueueConfig{
 		Name:       "",

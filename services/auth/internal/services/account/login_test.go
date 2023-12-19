@@ -20,6 +20,7 @@ func TestService_Login(t *testing.T) {
 	log, _ := logger.NewMock()
 	repo := repositories.NewMock(t)
 	service := NewService(log, repo)
+	hashedPassword, _ := passwordEncode("password")
 
 	tests := []struct {
 		name       string
@@ -39,7 +40,7 @@ func TestService_Login(t *testing.T) {
 			mockConfig: func() {
 				repo.EXPECT().
 					FindByUsername(gomock.Any(), gomock.Any()).
-					Return(&domain.RepositoryAccountEntity{ID: "42", Password: "password"}, nil)
+					Return(&domain.RepositoryAccountEntity{ID: "42", Password: hashedPassword}, nil)
 			},
 		},
 		{
@@ -65,14 +66,14 @@ func TestService_Login(t *testing.T) {
 			name: "Password Not Valid",
 			dto: &api.AuthRequestV1{
 				Username: "username",
-				Password: "password",
+				Password: "password2",
 			},
 			wantRes: nil,
 			wantErr: bcrypt.ErrMismatchedHashAndPassword,
 			mockConfig: func() {
 				repo.EXPECT().
 					FindByUsername(gomock.Any(), gomock.Any()).
-					Return(&domain.RepositoryAccountEntity{ID: "42", Password: "password2"}, nil)
+					Return(&domain.RepositoryAccountEntity{ID: "42", Password: hashedPassword}, nil)
 			},
 		},
 	}
@@ -80,15 +81,6 @@ func TestService_Login(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mockConfig()
-
-			if tt.dto != nil {
-				passHash, err := passwordEncode(tt.dto.Password)
-				if err != nil {
-					t.Fatalf("passwordEncode: %v", err)
-				}
-
-				tt.dto.Password = passHash
-			}
 
 			response, err := service.Login(ctx, tt.dto)
 			if err != nil || tt.wantErr != nil {

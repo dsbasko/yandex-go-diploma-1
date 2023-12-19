@@ -2,7 +2,7 @@
 .SILENT:
 
 test:
-	go test ./... --cover
+	go test ./... --cover -json
 
 test-cover:
 	go test --coverprofile=coverage.out ./... > /dev/null; \

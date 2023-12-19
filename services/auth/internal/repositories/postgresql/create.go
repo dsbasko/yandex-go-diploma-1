@@ -29,9 +29,6 @@ func (r *Repository) CreateOnce(
 		))).
 		ToSql()
 
-	fmt.Println(query)
-	fmt.Println(args)
-
 	if err != nil {
 		return nil, fmt.Errorf("squirrel.ToSql: %w", err)
 	}

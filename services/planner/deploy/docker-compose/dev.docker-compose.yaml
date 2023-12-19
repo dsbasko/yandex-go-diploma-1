@@ -9,6 +9,7 @@ services:
     volumes:
       - ../../:/app
       - ../../../../core:/core
+      - ../../../auth:/services/auth
 
   planner_db:
     build:

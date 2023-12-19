@@ -1,8 +1,13 @@
 package main
 
-import "time"
+import (
+	"log"
+
+	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/app"
+)
 
 func main() {
-	// TODO Don't forget to remove this нахрен
-	time.Sleep(24 * time.Hour)
+	if err := app.Run(); err != nil {
+		log.Panicf("app.Run: %v", err)
+	}
 }

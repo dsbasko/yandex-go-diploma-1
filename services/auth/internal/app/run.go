@@ -6,9 +6,11 @@ import (
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/config"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/controllers/amqp"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/controllers/rest"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/repositories"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/services/account"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/services/jwt"
 )
 
 func Run() error {
@@ -31,11 +33,18 @@ func Run() error {
 	}
 
 	accountService := account.NewService(log, repo)
+	jwtService := jwt.NewService(log, repo)
+
+	cancelServer, err := amqp.RunController(ctx, log, jwtService)
+	defer cancelServer()
+	if err != nil {
+		return fmt.Errorf("amqp.RunController: %w", err)
+	}
 
 	// HTTP REST триггер
 	errRestCh := make(chan error)
 	go func() {
-		if err = rest.RunServer(ctx, log, accountService); err != nil {
+		if err = rest.RunController(ctx, log, accountService, jwtService); err != nil {
 			errRestCh <- fmt.Errorf("rest.Run: %v", err)
 		}
 	}()
