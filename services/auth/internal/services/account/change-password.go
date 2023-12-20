@@ -4,12 +4,15 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/controllers/rest/middleware"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 )
 
-func (s *Service) ChangePassword(ctx context.Context, dto *api.ChangePasswordRequestV1) (*api.ChangePasswordResponseV1, error) {
+func (s *Service) ChangePassword(
+	ctx context.Context,
+	userID string,
+	dto *api.ChangePasswordRequestV1,
+) (*api.ChangePasswordResponseV1, error) {
 	if ctx == nil || dto == nil {
 		return nil, ErrArgumentsNotFilled
 	}
@@ -22,12 +25,7 @@ func (s *Service) ChangePassword(ctx context.Context, dto *api.ChangePasswordReq
 	default:
 	}
 
-	authPayload := middleware.GetAuthPayload(ctx)
-	if authPayload == nil {
-		return nil, ErrUnauthorized
-	}
-
-	foundUser, err := s.repo.FindByID(ctx, authPayload.UserID)
+	foundUser, err := s.repo.FindByID(ctx, userID)
 	if err != nil {
 		return nil, fmt.Errorf("repo.FindByID: %w", err)
 	}
@@ -42,7 +40,7 @@ func (s *Service) ChangePassword(ctx context.Context, dto *api.ChangePasswordReq
 	}
 
 	response, err := s.repo.UpdateOnce(ctx, &domain.RepositoryAccountEntity{
-		ID:       authPayload.UserID,
+		ID:       userID,
 		Password: passHash,
 	})
 	if err != nil {

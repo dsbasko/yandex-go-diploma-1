@@ -12,7 +12,9 @@ import (
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
 )
 
-var CheckAuthKey = "auth-payload"
+type AuthKey string
+
+var CheckAuthKey AuthKey = "auth-payload"
 
 func CheckAuth(log *logger.Logger, jwtService *jwt.Service) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {

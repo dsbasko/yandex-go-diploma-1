@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/controllers/rest/middleware"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 )
 
@@ -18,7 +19,14 @@ func (h *Handler) ChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := h.accountService.ChangePassword(r.Context(), &dto)
+	authPayload := middleware.GetAuthPayload(r.Context())
+	if authPayload == nil {
+		h.log.Error("Unauthorized")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	response, err := h.accountService.ChangePassword(r.Context(), authPayload.UserID, &dto)
 	if err != nil {
 		h.log.Errorf("accountService.Register: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
