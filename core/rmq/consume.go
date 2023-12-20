@@ -48,7 +48,7 @@ type SimpleConsumeConfig struct {
 	Queue     string
 	Key       string
 	Consumer  string
-	PullMsgFn func(msg amqp091.Delivery)
+	PullMsgFn func(msg amqp091.Delivery) *amqp091.Publishing
 }
 
 func (c *Connector) SimpleConsume(
@@ -99,15 +99,18 @@ func (c *Connector) SimpleConsume(
 			}
 
 			c.log.Debugw(
-				fmt.Sprintf("costumer %s received a message along the route %s", msg.ConsumerTag, msg.RoutingKey),
+				"message has been sent and wait response",
 				"payload", string(msg.Body),
+				"correlation_id", msg.CorrelationId,
 			)
 
-			cfgConsume.PullMsgFn(msg)
+			replyMsg := cfgConsume.PullMsgFn(msg)
 
 			if msg.ReplyTo != "" {
 				c.log.Debugw(
 					fmt.Sprintf("costumer %s sent reply to queue %s", msg.ConsumerTag, msg.ReplyTo),
+					"payload", string(replyMsg.Body),
+					"correlation_id", msg.CorrelationId,
 				)
 			}
 		}

@@ -10,19 +10,13 @@ import (
 	"github.com/rabbitmq/amqp091-go"
 )
 
-type responseJWTValidate struct {
-	Close   func()
-	IsValid bool
-	Payload *api.JWTPayloadV1
-}
-
-func (a *Adapter) JWTValidate(ctx context.Context, token string) (*responseJWTValidate, error) {
+func (a *Adapter) JWTValidate(ctx context.Context, token string) (*api.JWTValidationResponseV1, error) {
 	dtoBytes, err := json.Marshal(api.JWTValidationRequestV1{Token: token})
 	if err != nil {
 		return nil, fmt.Errorf("json.Marshal: %w", err)
 	}
 
-	respCh, cancel, err := a.conn.SimplePublishAndWaitResponse(ctx, &rmq.SimplePublisherConfig{
+	body, err := a.conn.SimplePublishAndWaitResponse(ctx, &rmq.SimplePublisherConfig{
 		Exchange:  api.AMQPExchange,
 		Key:       api.AMQPKeyJWTValidation,
 		Mandatory: true,
@@ -35,14 +29,9 @@ func (a *Adapter) JWTValidate(ctx context.Context, token string) (*responseJWTVa
 	}
 
 	var response api.JWTValidationResponseV1
-	resp := <-respCh
-	if err = json.Unmarshal(resp.Body, &response); err != nil {
+	if err = json.Unmarshal(body, &response); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal: %w", err)
 	}
 
-	return &responseJWTValidate{
-		Close:   cancel,
-		IsValid: response.IsValid,
-		Payload: response.Payload,
-	}, nil
+	return &response, nil
 }

@@ -38,15 +38,10 @@ func Run() error {
 		Также буду думать над тем как упростить это общение
 		↓↓↓↓↓↓↓↓↓↓↓↓↓
 	*/
-	response, err := rmqAdapter.JWTValidate(ctx, token)
-	if err != nil {
+	if _, err = rmqAdapter.JWTValidate(ctx, token); err != nil {
 		log.Errorf("rmqAdapter.JWTValidate: %v", err)
 	}
-	log.Infof("rmqAdapter.JWTValidate: %v | %+v", response.IsValid, response.Payload)
-	response.Close()
-	/*
-		↑↑↑↑↑↑↑↑↑↑↑↑
-	*/
+	/* ↑↑↑↑↑↑↑↑↑↑↑↑ */
 
 	// TODO Don't forget to remove this нахрен
 	time.Sleep(24 * time.Hour)

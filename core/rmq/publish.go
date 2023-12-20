@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/rabbitmq/amqp091-go"
 )
 
@@ -27,6 +28,10 @@ func (c *Connector) Publish(
 		return fmt.Errorf("conn.Channel: %w", err)
 	}
 	defer ch.Close()
+
+	if cfgPublisher.Msg.CorrelationId == "" {
+		cfgPublisher.Msg.CorrelationId = uuid.New().String()
+	}
 
 	return ch.PublishWithContext(
 		ctx,
@@ -52,7 +57,7 @@ type SimplePublisherConfig struct {
 func (c *Connector) SimplePublishAndWaitResponse(
 	ctx context.Context,
 	cfgPublisher *SimplePublisherConfig,
-) (<-chan amqp091.Delivery, func(), error) {
+) ([]byte, error) {
 	replyQueue, err := c.QueueDeclare(&QueueConfig{
 		Name:       "",
 		Durable:    false,
@@ -62,7 +67,7 @@ func (c *Connector) SimplePublishAndWaitResponse(
 		Args:       nil,
 	})
 	if err != nil {
-		return nil, func() {}, err
+		return []byte(""), err
 	}
 
 	msgs, closeFn, err := c.Consume(ctx, &ConsumeConfig{
@@ -74,21 +79,40 @@ func (c *Connector) SimplePublishAndWaitResponse(
 		NoWait:    false,
 		Args:      nil,
 	})
+	defer closeFn()
 	if err != nil {
-		return nil, func() {}, err
+		return []byte(""), err
 	}
 
-	cfgPublisher.Msg.ReplyTo = replyQueue.Name
+	if cfgPublisher.Msg.CorrelationId == "" {
+		cfgPublisher.Msg.CorrelationId = uuid.New().String()
+	}
+	if cfgPublisher.Msg.ReplyTo == "" {
+		cfgPublisher.Msg.ReplyTo = replyQueue.Name
+	}
 	if errPub := c.Publish(ctx, &PublisherConfig{
 		cfgPublisher.Exchange,
 		cfgPublisher.Key,
 		cfgPublisher.Mandatory,
 		cfgPublisher.Msg,
 	}); errPub != nil {
-		return nil, func() {}, errPub
+		return []byte(""), errPub
 	}
 
-	return msgs, closeFn, nil
+	c.log.Debugw(
+		"message has been sent and wait response",
+		"payload", string(cfgPublisher.Msg.Body),
+		"correlation_id", cfgPublisher.Msg.CorrelationId,
+	)
+
+	msg := <-msgs
+	c.log.Debugw(
+		"a response to the message has been received",
+		"payload", string(msg.Body),
+		"correlation_id", msg.CorrelationId,
+	)
+
+	return msg.Body, nil
 }
 
 /*
@@ -110,6 +134,10 @@ func (c *Connector) SimplePublishReply(
 		return fmt.Errorf("conn.Channel: %w", err)
 	}
 	defer ch.Close()
+
+	if cfgPublisher.IncomingMsg.CorrelationId != "" && cfgPublisher.ReplyMsg.CorrelationId == "" {
+		cfgPublisher.ReplyMsg.CorrelationId = cfgPublisher.IncomingMsg.CorrelationId
+	}
 
 	if err = ch.PublishWithContext(
 		ctx,
