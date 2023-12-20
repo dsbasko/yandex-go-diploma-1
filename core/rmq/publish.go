@@ -42,7 +42,7 @@ func (c *Connector) Publish(
 Отправка сообщения и ожидание ответа
 */
 
-type SimplePublisherAndWaitResponseConfig struct {
+type SimplePublisherConfig struct {
 	Exchange  string
 	Key       string
 	Mandatory bool
@@ -51,7 +51,7 @@ type SimplePublisherAndWaitResponseConfig struct {
 
 func (c *Connector) SimplePublishAndWaitResponse(
 	ctx context.Context,
-	cfgPublisher *SimplePublisherAndWaitResponseConfig,
+	cfgPublisher *SimplePublisherConfig,
 ) (<-chan amqp091.Delivery, func(), error) {
 	replyQueue, err := c.QueueDeclare(&QueueConfig{
 		Name:       "",
@@ -89,4 +89,42 @@ func (c *Connector) SimplePublishAndWaitResponse(
 	}
 
 	return msgs, closeFn, nil
+}
+
+/*
+Отправка сообщения в ответ
+*/
+
+type SimplePublisherReplyConfig struct {
+	Mandatory   bool
+	IncomingMsg amqp091.Delivery
+	ReplyMsg    amqp091.Publishing
+}
+
+func (c *Connector) SimplePublishReply(
+	ctx context.Context,
+	cfgPublisher *SimplePublisherReplyConfig,
+) error {
+	ch, err := c.conn.Channel()
+	if err != nil {
+		return fmt.Errorf("conn.Channel: %w", err)
+	}
+	defer ch.Close()
+
+	if err = ch.PublishWithContext(
+		ctx,
+		"",
+		cfgPublisher.IncomingMsg.ReplyTo,
+		cfgPublisher.Mandatory,
+		false,
+		cfgPublisher.ReplyMsg,
+	); err != nil {
+		return fmt.Errorf("ch.PublishWithContext: %w", err)
+	}
+
+	if err = cfgPublisher.IncomingMsg.Ack(true); err != nil {
+		return fmt.Errorf("IncomingMsg.Ack: %w", err)
+	}
+
+	return nil
 }

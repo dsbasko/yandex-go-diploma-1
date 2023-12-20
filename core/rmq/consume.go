@@ -17,13 +17,6 @@ type ConsumeConfig struct {
 	Args      amqp091.Table
 }
 
-type SimpleConsumeConfig struct {
-	Exchange string
-	Queue    string
-	Key      string
-	Consumer string
-}
-
 func (c *Connector) Consume(
 	ctx context.Context,
 	cfgConsume *ConsumeConfig,
@@ -50,15 +43,23 @@ func (c *Connector) Consume(
 	return msg, func() { ch.Close() }, nil
 }
 
+type SimpleConsumeConfig struct {
+	Exchange  string
+	Queue     string
+	Key       string
+	Consumer  string
+	PullMsgFn func(msg amqp091.Delivery)
+}
+
 func (c *Connector) SimpleConsume(
 	ctx context.Context,
 	cfgConsume *SimpleConsumeConfig,
-) (<-chan amqp091.Delivery, func(), error) {
+) error {
 	if _, err := c.QueueDeclare(&QueueConfig{
 		Name:    cfgConsume.Queue,
 		Durable: true,
 	}); err != nil {
-		return nil, func() {}, err
+		return fmt.Errorf("QueueDeclare: %w", err)
 	}
 
 	if err := c.Bind(&BindConfig{
@@ -66,15 +67,15 @@ func (c *Connector) SimpleConsume(
 		Queue:    cfgConsume.Queue,
 		Key:      cfgConsume.Key,
 	}); err != nil {
-		return nil, func() {}, err
+		return fmt.Errorf("Bind: %w", err)
 	}
 
 	ch, err := c.conn.Channel()
 	if err != nil {
-		return nil, func() {}, fmt.Errorf("conn.Channel: %w", err)
+		return fmt.Errorf("conn.Channel: %w", err)
 	}
 
-	msg, err := ch.ConsumeWithContext(
+	msgs, err := ch.ConsumeWithContext(
 		ctx,
 		cfgConsume.Queue,
 		cfgConsume.Consumer,
@@ -85,8 +86,32 @@ func (c *Connector) SimpleConsume(
 		nil,
 	)
 	if err != nil {
-		return nil, nil, fmt.Errorf("ConsumeWithContext: %w", err)
+		return fmt.Errorf("ConsumeWithContext: %w", err)
 	}
 
-	return msg, func() { ch.Close() }, nil
+	go func() {
+		for msg := range msgs {
+			select {
+			case <-ctx.Done():
+				ch.Close()
+				return
+			default:
+			}
+
+			c.log.Debugw(
+				fmt.Sprintf("costumer %s received a message along the route %s", msg.ConsumerTag, msg.RoutingKey),
+				"payload", string(msg.Body),
+			)
+
+			cfgConsume.PullMsgFn(msg)
+
+			if msg.ReplyTo != "" {
+				c.log.Debugw(
+					fmt.Sprintf("costumer %s sent reply to queue %s", msg.ConsumerTag, msg.ReplyTo),
+				)
+			}
+		}
+	}()
+
+	return nil
 }

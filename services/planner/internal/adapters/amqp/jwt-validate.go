@@ -22,7 +22,7 @@ func (a *Adapter) JWTValidate(ctx context.Context, token string) (*responseJWTVa
 		return nil, fmt.Errorf("json.Marshal: %w", err)
 	}
 
-	respCh, cancel, err := a.conn.SimplePublishAndWaitResponse(ctx, &rmq.SimplePublisherAndWaitResponseConfig{
+	respCh, cancel, err := a.conn.SimplePublishAndWaitResponse(ctx, &rmq.SimplePublisherConfig{
 		Exchange:  api.AMQPExchange,
 		Key:       api.AMQPKeyJWTValidation,
 		Mandatory: true,
