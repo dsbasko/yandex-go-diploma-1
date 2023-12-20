@@ -26,7 +26,7 @@ func Run() error {
 		return fmt.Errorf("logger.NewLogger: %w", err)
 	}
 
-	rmqAdapter, err := amqp.RunAdapter()
+	rmqAdapter, err := amqp.RunAdapter(log)
 	if err != nil {
 		return fmt.Errorf("amqp.RunAdapter: %w", err)
 	}

@@ -17,7 +17,7 @@ func RunController(
 	log *logger.Logger,
 	jwtService *jwt.Service,
 ) (func(), error) {
-	conn, err := rmq.Connect(config.GetRmqConnectingString())
+	conn, err := rmq.Connect(log, config.GetRmqConnectingString())
 	if err != nil {
 		return func() {}, err
 	}
@@ -36,13 +36,10 @@ func RunController(
 		return connClose, fmt.Errorf("conn.ExchangeDeclare: %w", err)
 	}
 
-	consumerClose, err := consumers.Validation(ctx, log, jwtService, conn)
+	err = consumers.Validation(ctx, log, jwtService, conn)
 	if err != nil {
 		return connClose, fmt.Errorf("consumers.Validation: %w", err)
 	}
 
-	return func() {
-		consumerClose()
-		connClose()
-	}, err
+	return connClose, err
 }
