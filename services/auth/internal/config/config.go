@@ -64,6 +64,10 @@ func GetJwtExp() time.Duration {
 	return time.Duration(cfg.JwtExpMinutes) * time.Minute
 }
 
+func SetJwtExp(exp time.Duration) {
+	cfg.JwtExpMinutes = int(exp.Minutes())
+}
+
 func GetRestReadTimeout() time.Duration {
 	return time.Duration(cfg.RestReadTimeout) * time.Millisecond
 }
