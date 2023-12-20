@@ -7,13 +7,6 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 )
 
-const (
-	UsernameMinLength int = 4
-	UsernameMaxLength int = 16
-	PasswordMinLength int = 8
-	PasswordMaxLength int = 24
-)
-
 func (s *Service) Register(ctx context.Context, dto *api.RegisterRequestV1) (*api.RegisterResponseV1, error) {
 	if ctx == nil || dto == nil {
 		return nil, ErrArgumentsNotFilled

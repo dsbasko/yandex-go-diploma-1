@@ -20,6 +20,7 @@ func RunController(
 	jwtService *jwt.Service,
 ) error {
 	handlers := chi.NewRouter()
+
 	middleware.Inject(log, handlers)
 	handler.Inject(log, handlers, accountService, jwtService)
 

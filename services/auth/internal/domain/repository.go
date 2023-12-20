@@ -12,7 +12,9 @@ import (
 type Repository interface {
 	Ping(ctx context.Context) error
 	CreateOnce(ctx context.Context, dto *api.RegisterRequestV1) (*RepositoryAccountEntity, error)
+	FindByID(ctx context.Context, id string) (*RepositoryAccountEntity, error)
 	FindByUsername(ctx context.Context, username string) (*RepositoryAccountEntity, error)
+	UpdateOnce(ctx context.Context, dto *RepositoryAccountEntity) (*RepositoryAccountEntity, error)
 }
 
 type RepositoryAccountEntity struct {

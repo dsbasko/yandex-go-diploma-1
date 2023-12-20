@@ -7,19 +7,22 @@ import (
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 )
 
-func (r *Repository) CreateOnce(
+func (r *Repository) UpdateOnce(
 	ctx context.Context,
-	dto *api.RegisterRequestV1,
+	dto *domain.RepositoryAccountEntity,
 ) (*domain.RepositoryAccountEntity, error) {
 	dtoKeysAndValues := lib.StructToKeysAndValues(dto, true, true)
+	setMap := map[string]any{}
+	for i, key := range dtoKeysAndValues.Keys {
+		setMap[key] = dtoKeysAndValues.Values[i]
+	}
 
 	query, args, err := r.builder.
-		Insert("accounts").
-		Columns(dtoKeysAndValues.Keys...).
-		Values(dtoKeysAndValues.Values...).
+		Update("accounts").
+		SetMap(setMap).
+		Where("id = ?", dto.ID).
 		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(
 			lib.StructToKeysAndValues(
 				&domain.RepositoryAccountEntity{},

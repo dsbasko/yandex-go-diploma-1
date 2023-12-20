@@ -51,6 +51,21 @@ func (mr *MockRepositoryMockRecorder) CreateOnce(arg0, arg1 interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOnce", reflect.TypeOf((*MockRepository)(nil).CreateOnce), arg0, arg1)
 }
 
+// FindByID mocks base method.
+func (m *MockRepository) FindByID(arg0 context.Context, arg1 string) (*domain.RepositoryAccountEntity, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindByID", arg0, arg1)
+	ret0, _ := ret[0].(*domain.RepositoryAccountEntity)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindByID indicates an expected call of FindByID.
+func (mr *MockRepositoryMockRecorder) FindByID(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockRepository)(nil).FindByID), arg0, arg1)
+}
+
 // FindByUsername mocks base method.
 func (m *MockRepository) FindByUsername(arg0 context.Context, arg1 string) (*domain.RepositoryAccountEntity, error) {
 	m.ctrl.T.Helper()
@@ -78,4 +93,19 @@ func (m *MockRepository) Ping(arg0 context.Context) error {
 func (mr *MockRepositoryMockRecorder) Ping(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ping", reflect.TypeOf((*MockRepository)(nil).Ping), arg0)
+}
+
+// UpdateOnce mocks base method.
+func (m *MockRepository) UpdateOnce(arg0 context.Context, arg1 *domain.RepositoryAccountEntity) (*domain.RepositoryAccountEntity, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateOnce", arg0, arg1)
+	ret0, _ := ret[0].(*domain.RepositoryAccountEntity)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateOnce indicates an expected call of UpdateOnce.
+func (mr *MockRepositoryMockRecorder) UpdateOnce(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOnce", reflect.TypeOf((*MockRepository)(nil).UpdateOnce), arg0, arg1)
 }

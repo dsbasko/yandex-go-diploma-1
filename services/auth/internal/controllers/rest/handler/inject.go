@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/controllers/rest/middleware"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/services/account"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/services/jwt"
 	"github.com/go-chi/chi/v5"
@@ -28,6 +29,7 @@ func Inject(
 	handler.Get("/ping", h.Ping)
 	handler.Post("/register", h.Register)
 	handler.Post("/login", h.Login)
+	handler.With(middleware.CheckAuth(log, jwtService)).Post("/change_password", h.ChangePassword)
 
 	routes := handler.Routes()
 	for _, route := range routes {

@@ -1,6 +1,10 @@
 ### /ping Health check
 GET http://localhost/auth/ping
 
+
+
+
+
 ### /register Регистрация
 POST http://localhost/auth/register
 Content-Type: application/json
@@ -11,6 +15,24 @@ Content-Type: application/json
   "first_name": "first name",
   "last_name": "last name"
 }
+
+
+
+
+
+### /login Смена пароля
+POST http://localhost/auth/login
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZmExYzRkMjktNDVjYi00ZWEwLThmNmYtMmM4ZjlmZTczNzIzIn0.7j_ASnagrkWOlOSIhWszxVF_nIyzbjh27JxmR9E7IUw
+
+{
+  "old_password": "password",
+  "new_password": "new_password"
+}
+
+
+
+
 
 ### /login Авторизация
 POST http://localhost/auth/login

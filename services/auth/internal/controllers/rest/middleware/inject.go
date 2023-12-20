@@ -9,8 +9,8 @@ import (
 func Inject(log *logger.Logger, handler *chi.Mux) {
 	mw := middleware.New(log)
 
+	handler.Use(mw.RequestID)
+	handler.Use(mw.Logger)
 	handler.Use(mw.CompressEncoding)
 	handler.Use(mw.CompressDecoding)
-	handler.Use(mw.Logger)
-	handler.Use(mw.RequestID)
 }
