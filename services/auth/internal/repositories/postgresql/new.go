@@ -26,10 +26,6 @@ func NewRepository(ctx context.Context) (*Repository, error) {
 		return nil, fmt.Errorf("postgresql.Connect: %w", err)
 	}
 
-	if err = conn.Ping(ctx); err != nil {
-		return nil, fmt.Errorf("conn.Ping: %w", err)
-	}
-
 	builder := squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar)
 
 	repo := Repository{

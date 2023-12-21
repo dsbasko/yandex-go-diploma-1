@@ -10,6 +10,7 @@ services:
       - ../../:/app
       - ../../../../core:/core
       - ../../../auth:/services/auth
+      - ../../../notification:/services/notification
 
   planner_db:
     build:

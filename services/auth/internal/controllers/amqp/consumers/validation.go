@@ -13,27 +13,15 @@ import (
 )
 
 func Validation(ctx context.Context, log *logger.Logger, jwtService *jwt.Service, conn *rmq.Connector) error {
-	pullMsgFn := func(msg amqp091.Delivery) *amqp091.Publishing {
-		var request api.JWTValidationRequestV1
-		var response api.JWTValidationResponseV1
-		var replyMsg amqp091.Publishing
+	var request api.JWTValidationRequestV1
+	var response api.JWTValidationResponseV1
+	var replyMsg amqp091.Publishing
 
-		if err := json.Unmarshal(msg.Body, &request); err != nil {
-			log.Errorf("json.Unmarshal: %v", err)
-			return &replyMsg
-		}
-
-		validate, err := jwtService.Validation(ctx, &request)
-		if err != nil {
-			log.Errorf("jwtService.Validation: %v", err)
-			return &replyMsg
-		}
-		response = *validate
-
+	replyFn := func(msg amqp091.Delivery) {
 		body, err := json.Marshal(response)
 		if err != nil {
 			log.Errorf("json.Marshal: %v", err)
-			return &replyMsg
+			return
 		}
 
 		replyMsg.Body = body
@@ -43,10 +31,24 @@ func Validation(ctx context.Context, log *logger.Logger, jwtService *jwt.Service
 			Mandatory:   true,
 		}); err != nil {
 			log.Errorf("conn.SimplePublishReply: %v", err)
-			return &replyMsg
+			return
+		}
+	}
+
+	pullMsgFn := func(msg amqp091.Delivery) {
+		defer replyFn(msg)
+
+		if err := json.Unmarshal(msg.Body, &request); err != nil {
+			log.Errorf("json.Unmarshal: %v", err)
+			return
 		}
 
-		return &replyMsg
+		validate, err := jwtService.Validation(ctx, &request)
+		if err != nil {
+			log.Errorf("jwtService.Validation: %v", err)
+			return
+		}
+		response = *validate
 	}
 
 	err := conn.SimpleConsume(ctx, &rmq.SimpleConsumeConfig{

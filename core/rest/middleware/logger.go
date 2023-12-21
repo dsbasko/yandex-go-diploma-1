@@ -20,7 +20,7 @@ func (r *responseLogger) Write(b []byte) (int, error) {
 }
 
 func (m *Middleware) Logger(next http.Handler) http.Handler {
-	m.log.Debug("logger middleware enabled")
+	m.log.Debug("logger middlewares enabled")
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		args := []any{

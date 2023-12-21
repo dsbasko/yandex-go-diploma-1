@@ -6,8 +6,6 @@ services:
     build:
       context: ../../../../
       dockerfile: ./services/auth/deploy/docker/prod.Dockerfile
-    depends_on:
-      - auth_db
 
   auth_db:
     build:

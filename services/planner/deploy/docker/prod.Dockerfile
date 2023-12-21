@@ -1,7 +1,11 @@
 FROM golang:1.21-alpine3.19 as builder
 WORKDIR /app
+
+COPY ./services/planner ./
 COPY ./core /core
-COPY ./services/planner /app
+COPY ./services/auth /services/auth
+COPY ./services/notification /services/notification
+
 RUN go mod download
 RUN go build -o ./bin/planner-service ./cmd/planner-service/main.go
 

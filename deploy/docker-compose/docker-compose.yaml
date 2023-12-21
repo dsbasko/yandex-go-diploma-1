@@ -50,6 +50,9 @@ services:
       PSQL_DB: ${AUTH_PSQL_DB}
       PSQL_MAX_POOLS: ${AUTH_PSQL_MAX_POOLS}
       RMQ_HOST: ${RMQ_CONTAINER_NAME}
+    depends_on:
+      - auth_db
+      - rmq
 
   auth_db:
     container_name: ${AUTH_PSQL_CONTAINER_NAME}
@@ -86,6 +89,9 @@ services:
       PSQL_DB: ${PLANNER_PSQL_DB}
       PSQL_MAX_POOLS: ${PLANNER_PSQL_MAX_POOLS}
       RMQ_HOST: ${RMQ_CONTAINER_NAME}
+    depends_on:
+      - planner_db
+      - rmq
 
   planner_db:
     container_name: ${PLANNER_PSQL_CONTAINER_NAME}
@@ -122,6 +128,9 @@ services:
       PSQL_DB: ${NOTIFICATION_PSQL_DB}
       PSQL_MAX_POOLS: ${NOTIFICATION_PSQL_MAX_POOLS}
       RMQ_HOST: ${RMQ_CONTAINER_NAME}
+    depends_on:
+      - notification_db
+      - rmq
 
   notification_db:
     container_name: ${NOTIFICATION_PSQL_CONTAINER_NAME}

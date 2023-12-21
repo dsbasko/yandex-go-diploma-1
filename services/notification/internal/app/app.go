@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
-	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/config"
-	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/controllers/rest"
+	"github.com/dsbasko/yandex-go-diploma-1/services/notification/internal/config"
+	"github.com/dsbasko/yandex-go-diploma-1/services/notification/internal/controllers/rest"
 )
 
 func Run() error {

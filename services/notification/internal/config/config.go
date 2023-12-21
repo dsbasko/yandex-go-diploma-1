@@ -14,11 +14,6 @@ type config struct {
 
 	RestReadTimeout  int `env:"REST_READ_TIMEOUT"`
 	RestWriteTimeout int `env:"REST_WRITE_TIMEOUT"`
-
-	RmqHost     string `env:"RMQ_HOST"`
-	RmqPort     string `env:"RMQ_PORT"`
-	RmqAuthUser string `env:"RMQ_AUTH_USER"`
-	RmqAuthPass string `env:"RMQ_AUTH_PASS"`
 }
 
 var (
@@ -53,14 +48,4 @@ func GetRestReadTimeout() time.Duration {
 
 func GetRestWriteTimeout() time.Duration {
 	return time.Duration(cfg.RestWriteTimeout) * time.Millisecond
-}
-
-func GetRmqConnectingString() string {
-	return fmt.Sprintf(
-		"amqp://%s:%s@%s:%s/",
-		cfg.RmqAuthUser,
-		cfg.RmqAuthPass,
-		cfg.RmqHost,
-		cfg.RmqPort,
-	)
 }

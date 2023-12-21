@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"context"
@@ -11,10 +11,6 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
 )
-
-type AuthKey string
-
-var CheckAuthKey AuthKey = "auth-payload"
 
 func CheckAuth(log *logger.Logger, jwtService *jwt.Service) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
@@ -42,20 +38,14 @@ func CheckAuth(log *logger.Logger, jwtService *jwt.Service) func(next http.Handl
 				return
 			}
 
-			ctx := context.WithValue(r.Context(), CheckAuthKey, validate.Payload)
+			if !validate.IsValid {
+				w.WriteHeader(http.StatusUnauthorized)
+				log.Warnf("Unauthorized. %+v", validate)
+				return
+			}
+
+			ctx := context.WithValue(r.Context(), coreMiddleware.CheckAuthKey, validate.Payload)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
-}
-
-func GetAuthPayload(ctx context.Context) *api.JWTPayloadV1 {
-	if ctx == nil {
-		return nil
-	}
-
-	if payload, ok := ctx.Value(CheckAuthKey).(*api.JWTPayloadV1); ok {
-		return payload
-	}
-
-	return nil
 }

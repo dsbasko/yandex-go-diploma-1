@@ -11,7 +11,7 @@ import (
 )
 
 func (m *Middleware) CompressDecoding(next http.Handler) http.Handler {
-	m.log.Debug("compress decoding middleware enabled")
+	m.log.Debug("compress decoding middlewares enabled")
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !strings.Contains(r.Header.Get("Content-Encoding"), "gzip") {

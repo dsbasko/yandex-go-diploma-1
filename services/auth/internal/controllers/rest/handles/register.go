@@ -1,4 +1,4 @@
-package handler
+package handles
 
 import (
 	"encoding/json"
@@ -8,8 +8,8 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 )
 
-func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
-	var dto api.AuthRequestV1
+func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
+	var dto api.RegisterRequestV1
 	defer r.Body.Close()
 
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
@@ -18,9 +18,9 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := h.accountService.Login(r.Context(), &dto)
+	response, err := h.accountService.Register(r.Context(), &dto)
 	if err != nil {
-		h.log.Errorf("accountService.Login: %v", err)
+		h.log.Errorf("accountService.Register: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		if _, err = w.Write([]byte(lib.ErrorsUnwrap(err).Error())); err != nil {
 			h.log.Errorf("Write: %v", err)
@@ -37,7 +37,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	if _, err = w.Write(responseBytes); err != nil {
 		h.log.Errorf("Write: %v", err)
 		w.WriteHeader(http.StatusBadRequest)

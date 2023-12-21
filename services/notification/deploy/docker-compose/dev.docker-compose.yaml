@@ -9,6 +9,8 @@ services:
     volumes:
       - ../../:/app
       - ../../../../core:/core
+      - ../../../auth:/services/auth
+      - ../../../planner:/services/planner
 
   notification_db:
     build:

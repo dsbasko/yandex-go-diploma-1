@@ -1,15 +1,16 @@
-package handler
+package handles
 
 import (
 	"encoding/json"
 	"net/http"
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	"github.com/dsbasko/yandex-go-diploma-1/core/rest/middleware"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 )
 
-func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
-	var dto api.RegisterRequestV1
+func (h *Handler) ChangePassword(w http.ResponseWriter, r *http.Request) {
+	var dto api.ChangePasswordRequestV1
 	defer r.Body.Close()
 
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
@@ -18,7 +19,14 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := h.accountService.Register(r.Context(), &dto)
+	authPayload := middleware.GetAuthPayload(r.Context())
+	if authPayload == nil {
+		h.log.Error("Unauthorized")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	response, err := h.accountService.ChangePassword(r.Context(), authPayload.UserID, &dto)
 	if err != nil {
 		h.log.Errorf("accountService.Register: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
@@ -37,7 +45,7 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 	if _, err = w.Write(responseBytes); err != nil {
 		h.log.Errorf("Write: %v", err)
 		w.WriteHeader(http.StatusBadRequest)

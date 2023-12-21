@@ -1,4 +1,4 @@
-### /ping Health check
+### /ping Проверка доступности сервиса
 GET http://localhost/auth/ping
 
 

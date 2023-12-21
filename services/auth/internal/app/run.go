@@ -44,7 +44,7 @@ func Run() error {
 	// HTTP REST триггер
 	errRestCh := make(chan error)
 	go func() {
-		if err = rest.RunController(ctx, log, accountService, jwtService); err != nil {
+		if err = rest.RunController(ctx, log, repo, accountService, jwtService); err != nil {
 			errRestCh <- fmt.Errorf("rest.Run: %v", err)
 		}
 	}()

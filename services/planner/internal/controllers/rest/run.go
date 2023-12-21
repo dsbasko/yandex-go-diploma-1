@@ -6,25 +6,16 @@ import (
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	coreMiddleware "github.com/dsbasko/yandex-go-diploma-1/core/rest/middleware"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/config"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/controllers/rest/handles"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/controllers/rest/middlewares"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/services/account"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/services/jwt"
+	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/config"
+	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/controllers/rest/handles"
+
 	"github.com/go-chi/chi/v5"
 )
 
-func RunController(
-	ctx context.Context,
-	log *logger.Logger,
-	repo domain.Repository,
-	accountService *account.Service,
-	jwtService *jwt.Service,
-) error {
+func RunController(ctx context.Context, log *logger.Logger) error {
 	handler := chi.NewRouter()
 	coreMiddlewares := coreMiddleware.New(log)
-	h := handles.New(log, repo, accountService, jwtService)
+	h := handles.New(log)
 
 	handler.Use(coreMiddlewares.RequestID)
 	handler.Use(coreMiddlewares.Logger)
@@ -32,9 +23,6 @@ func RunController(
 	handler.Use(coreMiddlewares.CompressDecoding)
 
 	handler.Get("/ping", h.Ping)
-	handler.Post("/register", h.Register)
-	handler.Post("/login", h.Login)
-	handler.With(middlewares.CheckAuth(log, jwtService)).Post("/change_password", h.ChangePassword)
 
 	routes := handler.Routes()
 	for _, route := range routes {
@@ -59,6 +47,6 @@ func RunController(
 		}
 	}()
 
-	log.Infof("starting rest server at the address: http://localhost/auth")
+	log.Infof("starting rest server at the address: http://localhost/planner")
 	return server.ListenAndServe()
 }

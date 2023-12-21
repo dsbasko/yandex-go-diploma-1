@@ -19,7 +19,7 @@ func (w compressGzipWriter) Write(b []byte) (int, error) {
 }
 
 func (m *Middleware) CompressEncoding(next http.Handler) http.Handler {
-	m.log.Debug("compress encoding middleware enabled")
+	m.log.Debug("compress encoding middlewares enabled")
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !strings.Contains(r.Header.Get("Accept-Encoding"), "gzip") {

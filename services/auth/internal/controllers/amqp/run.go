@@ -17,7 +17,7 @@ func RunController(
 	log *logger.Logger,
 	jwtService *jwt.Service,
 ) (func(), error) {
-	conn, err := rmq.Connect(log, config.GetRmqConnectingString())
+	conn, err := rmq.Connect(ctx, log, config.GetRmqConnectingString())
 	if err != nil {
 		return func() {}, err
 	}

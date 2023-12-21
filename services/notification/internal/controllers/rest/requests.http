@@ -1,0 +1,2 @@
+### /ping Проверка доступности сервиса
+GET http://localhost/notification/ping
