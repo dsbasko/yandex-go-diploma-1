@@ -4,7 +4,6 @@ go 1.21
 
 require (
 	github.com/dsbasko/yandex-go-diploma-1/core v1.0.0
-	github.com/dsbasko/yandex-go-diploma-1/services/planner v1.0.0
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 )

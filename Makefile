@@ -25,9 +25,15 @@ lint:
 	@cd $(CORE_PATH) && golangci-lint run -c $(CONFIG) --path-prefix $(CORE_PATH)
 	@for SERVICE in $(SERVICES); do \
 		if [ "$$SERVICE" != "$(SERVICE_PATH)/service" ]; then \
-			echo "Linting $$SERVICE..."; \
 			cd $$SERVICE && golangci-lint run -c $(CONFIG) --path-prefix $$SERVICE; \
-			cd -; \
+		fi; \
+	done
+
+install-deps:
+	@cd $(CORE_PATH) && go mod tidy
+	@for SERVICE in $(SERVICES); do \
+		if [ "$$SERVICE" != "$(SERVICE_PATH)/service" ]; then \
+			cd $$SERVICE && go mod tidy; \
 		fi; \
 	done
 
