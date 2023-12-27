@@ -18,3 +18,9 @@ services:
       dockerfile: ./deploy/docker/psql.Dockerfile
     ports:
       - "${AUTH_PSQL_PORT}:${AUTH_PSQL_PORT}"
+
+  auth_db_migrator:
+    build:
+      context: ../../
+      dockerfile: ./deploy/docker/migrator.Dockerfile
+    restart: on-failure
