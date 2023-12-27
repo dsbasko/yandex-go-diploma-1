@@ -8,6 +8,13 @@ services:
       dockerfile: ./services/auth/deploy/docker/prod.Dockerfile
 
   auth_db:
+    restart: always
     build:
       context: ../../
       dockerfile: ./deploy/docker/psql.Dockerfile
+
+  auth_db_migrator:
+    restart: on-failure
+    build:
+      context: ../../
+      dockerfile: ./deploy/docker/migrator.Dockerfile

@@ -68,17 +68,18 @@ services:
       PGPORT: ${AUTH_PSQL_PORT}
 
   auth_db_migrator:
+    container_name: ${AUTH_PSQL_MIGRATOR_CONTAINER_NAME}
     extends:
       file: ../../services/auth/deploy/docker-compose/${ENV}.docker-compose.yaml
       service: auth_db_migrator
     networks:
       - yandex-diploma-1
     environment:
-      AUTH_PSQL_CONTAINER_NAME: ${AUTH_PSQL_CONTAINER_NAME}
-      AUTH_PSQL_DB: ${AUTH_PSQL_DB}
-      AUTH_PSQL_USER: ${AUTH_PSQL_USER}
-      AUTH_PSQL_PASS: ${AUTH_PSQL_PASS}
-      AUTH_PSQL_PORT: ${AUTH_PSQL_PORT}
+      PSQL_CONTAINER_NAME: ${AUTH_PSQL_CONTAINER_NAME}
+      PSQL_DB: ${AUTH_PSQL_DB}
+      PSQL_USER: ${AUTH_PSQL_USER}
+      PSQL_PASS: ${AUTH_PSQL_PASS}
+      PSQL_PORT: ${AUTH_PSQL_PORT}
 
   # Planner Service
   planner:

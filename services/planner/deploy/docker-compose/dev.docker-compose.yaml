@@ -2,7 +2,7 @@ version: '3'
 
 services:
   planner:
-    restart: "no"
+    restart: on-failure
     build:
       context: ../../../../
       dockerfile: ./services/planner/deploy/docker/dev.Dockerfile
@@ -13,6 +13,7 @@ services:
       - ../../../notification:/services/notification
 
   planner_db:
+    restart: "no"
     build:
       context: ../../
       dockerfile: ./deploy/docker/psql.Dockerfile

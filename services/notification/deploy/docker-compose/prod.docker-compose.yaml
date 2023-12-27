@@ -8,6 +8,7 @@ services:
       dockerfile: ./services/notification/deploy/docker/prod.Dockerfile
 
   notification_db:
+    restart: always
     build:
       context: ../../
       dockerfile: ./deploy/docker/psql.Dockerfile
