@@ -1,10 +1,10 @@
-package jwt
+package task
 
 import (
 	"testing"
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/repositories"
+	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/repositories"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -20,7 +20,7 @@ import (
 
 func TestService_Validation(t *testing.T) {
 	ctx := context.Background()
-	log, _ := logger.NewMock()
+	log := logger.NewMock()
 	repo := repositories.NewMock(t)
 	service := NewService(log, repo)
 

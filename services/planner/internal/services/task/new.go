@@ -1,8 +1,8 @@
-package account
+package task
 
 import (
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/domain"
 )
 
 type Service struct {

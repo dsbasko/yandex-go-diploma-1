@@ -11,3 +11,9 @@ services:
     build:
       context: ../../
       dockerfile: ./deploy/docker/psql.Dockerfile
+
+  planner_db_migrator:
+    restart: on-failure
+    build:
+      context: ../../
+      dockerfile: ./deploy/docker/migrator.Dockerfile

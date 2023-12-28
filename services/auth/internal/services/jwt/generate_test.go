@@ -11,7 +11,7 @@ import (
 )
 
 func TestService_Generate(t *testing.T) {
-	log, _ := logger.NewMock()
+	log := logger.NewMock()
 	repo := repositories.NewMock(t)
 	service := NewService(log, repo)
 

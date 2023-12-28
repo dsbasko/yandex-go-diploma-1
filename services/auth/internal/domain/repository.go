@@ -7,7 +7,7 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 )
 
-//go:generate mockgen -destination=../repositories/mock/mock.go -package=mock github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain Repository
+//go:generate ../../../../bin/mockgen -destination=../repositories/mock/mock.go -package=mock github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain Repository
 
 type Repository interface {
 	Ping(ctx context.Context) error

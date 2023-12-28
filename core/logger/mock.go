@@ -6,7 +6,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func NewMock() (*Logger, error) {
+func NewMock() *Logger {
 	var logger *zap.SugaredLogger
 	zapConfig := zap.Config{
 		Level:            zap.NewAtomicLevelAt(zap.DPanicLevel),
@@ -17,7 +17,7 @@ func NewMock() (*Logger, error) {
 
 	zapLogger, err := zapConfig.Build()
 	if err != nil {
-		return nil, fmt.Errorf("zapConfig.Build: %w", err)
+		return nil
 	}
 
 	logger = zapLogger.Sugar()
@@ -28,5 +28,5 @@ func NewMock() (*Logger, error) {
 		}
 	}()
 
-	return logger, nil
+	return logger
 }

@@ -6,16 +6,25 @@ import (
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	coreMiddleware "github.com/dsbasko/yandex-go-diploma-1/core/rest/middleware"
+	"github.com/dsbasko/yandex-go-diploma-1/core/rmq"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/config"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/controllers/rest/handles"
+	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/services/task"
 
 	"github.com/go-chi/chi/v5"
 )
 
-func RunController(ctx context.Context, log *logger.Logger) error {
+func RunController(
+	ctx context.Context,
+	log *logger.Logger,
+	repo domain.Repository,
+	adapter *rmq.Connector,
+	taskService *task.Service,
+) error {
 	handler := chi.NewRouter()
 	coreMiddlewares := coreMiddleware.New(log)
-	h := handles.New(log)
+	h := handles.New(log, repo, taskService)
 
 	handler.Use(coreMiddlewares.RequestID)
 	handler.Use(coreMiddlewares.Logger)
@@ -23,6 +32,7 @@ func RunController(ctx context.Context, log *logger.Logger) error {
 	handler.Use(coreMiddlewares.CompressDecoding)
 
 	handler.Get("/ping", h.Ping)
+	handler.With(coreMiddleware.CheckAuth(log, adapter)).Post("/", h.CreateTask)
 
 	routes := handler.Routes()
 	for _, route := range routes {

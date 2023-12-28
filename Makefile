@@ -32,6 +32,7 @@ lint:
 install-deps:
 	@GOBIN=$(LOCAL_BIN_PATH) go install github.com/pressly/goose/v3/cmd/goose@v3.17.0
 	@GOBIN=$(LOCAL_BIN_PATH) go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.55.2
+	@GOBIN=$(LOCAL_BIN_PATH) go install github.com/golang/mock/mockgen@v1.6.0
 	@cd $(CORE_PATH) && go mod tidy
 	@for SERVICE in $(SERVICES); do \
 		if [ "$$SERVICE" != "$(SERVICE_PATH)/service" ]; then \

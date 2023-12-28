@@ -1,0 +1,49 @@
+### [auth]/ping Проверка доступности сервиса
+GET http://localhost/auth/ping
+
+### [auth]/register Регистрация
+POST http://localhost/auth/register
+Content-Type: application/json
+
+{
+  "username": "login",
+  "password": "password",
+  "first_name": "first name",
+  "last_name": "last name"
+}
+
+### [auth]/login Авторизация
+POST http://localhost/auth/login
+Content-Type: application/json
+
+{
+  "username": "login",
+  "password": "password"
+}
+
+### [auth]/login Смена пароля
+POST http://localhost/auth/login
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDM2ODIzOTcsImlhdCI6MTcwMzY4MTc5NywiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiZjc1NjQxM2QtMzI5ZS00NGUyLWEzOTYtNzQ2NWZhYTRhNzdhIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.-Pz_gG6ikYT6jHA1OFZr-ZR0Q_c3bF4B9hdInj00HFo
+
+{
+  "old_password": "password",
+  "new_password": "new_password"
+}
+
+
+
+
+
+### [planner]/ping Проверка доступности сервиса
+GET http://localhost/planner/ping
+
+### [planner]/ Добавление задачи
+POST http://localhost/planner/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDM2ODIzOTcsImlhdCI6MTcwMzY4MTc5NywiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiZjc1NjQxM2QtMzI5ZS00NGUyLWEzOTYtNzQ2NWZhYTRhNzdhIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.-Pz_gG6ikYT6jHA1OFZr-ZR0Q_c3bF4B9hdInj00HFo
+
+{
+  "name": "Тестовая задача",
+  "description": "Описание тестовой задачи"
+}

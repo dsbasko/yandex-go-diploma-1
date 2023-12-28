@@ -19,3 +19,9 @@ services:
       dockerfile: ./deploy/docker/psql.Dockerfile
     ports:
       - "${PLANNER_PSQL_PORT}:${PLANNER_PSQL_PORT}"
+
+  planner_db_migrator:
+    restart: on-failure
+    build:
+      context: ../../
+      dockerfile: ./deploy/docker/migrator.Dockerfile
