@@ -2,6 +2,7 @@ package postgresql
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"strings"
 
@@ -33,17 +34,21 @@ func (r *Repository) CreateTask(
 	}
 
 	var response domain.RepositoryTaskEntity
+	var dueDate sql.NullTime
 	row := r.conn.QueryRow(ctx, query, args...)
 	if err = row.Scan(
 		&response.ID,
 		&response.UserID,
 		&response.Name,
 		&response.Description,
+		&dueDate,
 		&response.CreatedAt,
 		&response.UpdatedAt,
 	); err != nil {
 		return nil, fmt.Errorf("conn.QueryRow: row.Scan: %w", err)
 	}
+
+	response.DueDate = dueDate.Time
 
 	return &response, nil
 }

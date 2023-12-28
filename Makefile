@@ -22,6 +22,7 @@ stop:
 	fi
 
 lint:
+	@clear
 	@cd $(CORE_PATH) && $(LOCAL_BIN_PATH)/golangci-lint run -c $(CONFIG) --path-prefix $(CORE_PATH)
 	@for SERVICE in $(SERVICES); do \
 		if [ "$$SERVICE" != "$(SERVICE_PATH)/service" ]; then \

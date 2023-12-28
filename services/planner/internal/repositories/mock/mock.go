@@ -7,6 +7,7 @@ package mock
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	domain "github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/domain"
 	api "github.com/dsbasko/yandex-go-diploma-1/services/planner/pkg/api"
@@ -49,6 +50,21 @@ func (m *MockRepository) CreateTask(arg0 context.Context, arg1 *api.CreateTaskRe
 func (mr *MockRepositoryMockRecorder) CreateTask(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTask", reflect.TypeOf((*MockRepository)(nil).CreateTask), arg0, arg1)
+}
+
+// FindByUserIDAndDate mocks base method.
+func (m *MockRepository) FindByUserIDAndDate(arg0 context.Context, arg1 string, arg2, arg3 time.Time) (*[]domain.RepositoryTaskEntity, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindByUserIDAndDate", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*[]domain.RepositoryTaskEntity)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindByUserIDAndDate indicates an expected call of FindByUserIDAndDate.
+func (mr *MockRepositoryMockRecorder) FindByUserIDAndDate(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUserIDAndDate", reflect.TypeOf((*MockRepository)(nil).FindByUserIDAndDate), arg0, arg1, arg2, arg3)
 }
 
 // Ping mocks base method.

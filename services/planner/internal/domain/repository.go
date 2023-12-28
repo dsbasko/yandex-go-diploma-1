@@ -12,6 +12,7 @@ import (
 type Repository interface {
 	Ping(ctx context.Context) error
 	CreateTask(ctx context.Context, dto *api.CreateTaskRequestV1) (*RepositoryTaskEntity, error)
+	FindByUserIDAndDate(ctx context.Context, userID string, dateStart, dateEnd time.Time) (*[]RepositoryTaskEntity, error)
 }
 
 type RepositoryTaskEntity struct {
@@ -19,6 +20,7 @@ type RepositoryTaskEntity struct {
 	UserID      string    `json:"user_id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
+	DueDate     time.Time `json:"due_date"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }

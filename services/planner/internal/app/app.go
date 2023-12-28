@@ -38,6 +38,11 @@ func Run() error {
 
 	taskService := task.NewService(log, repo)
 
+	response, err := taskService.FindToday(ctx,
+		"657d98c7-0eb3-473d-a471-94c1214fde40",
+	)
+	fmt.Println("response", response)
+
 	// HTTP REST триггер
 	errRestCh := make(chan error)
 	go func() {

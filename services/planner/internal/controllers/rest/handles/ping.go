@@ -7,6 +7,7 @@ import (
 func (h *Handler) Ping(w http.ResponseWriter, r *http.Request) {
 	if err := h.repo.Ping(r.Context()); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)

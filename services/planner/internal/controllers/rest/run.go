@@ -33,6 +33,7 @@ func RunController(
 
 	handler.Get("/ping", h.Ping)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Post("/", h.CreateTask)
+	handler.With(coreMiddleware.CheckAuth(log, adapter)).Get("/today", h.GetToday)
 
 	routes := handler.Routes()
 	for _, route := range routes {

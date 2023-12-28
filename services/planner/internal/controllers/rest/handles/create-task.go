@@ -12,6 +12,18 @@ func (h *Handler) CreateTask(w http.ResponseWriter, r *http.Request) {
 	var dto api.CreateTaskRequestV1
 	defer r.Body.Close()
 
+	if r.Header.Get("Content-Type") != "application/json" {
+		h.log.Error(ErrWrongContentType)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if r.ContentLength == 0 {
+		h.log.Error(ErrEmptyBody)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
 		h.log.Errorf("json.Decode: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
@@ -23,7 +35,7 @@ func (h *Handler) CreateTask(w http.ResponseWriter, r *http.Request) {
 
 	response, err := h.taskService.Create(r.Context(), &dto)
 	if err != nil {
-		h.log.Errorf("taskService.Register: %v", err)
+		h.log.Errorf("taskService.Create: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
