@@ -18,14 +18,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHandler_GetToday(t *testing.T) {
+func TestHandler_GetArchive(t *testing.T) {
 	log := logger.NewMock()
 	repo := repositories.NewMock(t)
 	taskService := task.NewService(log, repo)
 
 	router := chi.NewRouter()
 	h := New(log, repo, taskService)
-	router.With(coreMiddleware.CheckAuthMock("42")).Get("/today", h.GetToday)
+	router.With(coreMiddleware.CheckAuthMock("42")).Get("/archive", h.GetArchive)
 
 	ts := httptest.NewServer(router)
 	defer ts.Close()
@@ -57,7 +57,7 @@ func TestHandler_GetToday(t *testing.T) {
 			wantStatusCode: http.StatusOK,
 			repoCfg: func() {
 				repo.EXPECT().
-					FindByUserIDAndDate(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+					FindArchive(gomock.Any(), gomock.Any()).
 					Return(&[]entities.RepositoryTaskEntity{
 						{
 							ID:          "42",
@@ -88,7 +88,7 @@ func TestHandler_GetToday(t *testing.T) {
 			wantStatusCode: http.StatusOK,
 			repoCfg: func() {
 				repo.EXPECT().
-					FindByUserIDAndDate(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+					FindArchive(gomock.Any(), gomock.Any()).
 					Return(&[]entities.RepositoryTaskEntity{}, nil)
 			},
 			wantBody: func() string {
@@ -106,7 +106,7 @@ func TestHandler_GetToday(t *testing.T) {
 			tt.repoCfg()
 			resp, body := test.Request(t, ts, &test.RequestArgs{
 				Method:   "GET",
-				Path:     "/today",
+				Path:     "/archive",
 				JWTToken: tt.token,
 			})
 			defer resp.Body.Close()

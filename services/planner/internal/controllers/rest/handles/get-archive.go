@@ -8,13 +8,13 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/pkg/api"
 )
 
-func (h *Handler) GetToday(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetArchive(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	authPayload := coreMiddleware.GetAuthPayload(r.Context())
-	response, err := h.taskService.FindToday(r.Context(), authPayload.UserID)
+	response, err := h.taskService.FindArchive(r.Context(), authPayload.UserID)
 	if err != nil {
-		h.log.Errorf("taskService.FindToday: %v", err)
+		h.log.Errorf("taskService.FindArchive: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

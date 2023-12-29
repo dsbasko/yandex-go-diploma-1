@@ -34,6 +34,7 @@ func (r *Repository) FindByID(
 		&response.Name,
 		&response.Description,
 		&response.DueDate,
+		&response.IsArchive,
 		&response.CreatedAt,
 		&response.UpdatedAt,
 	); err != nil {
@@ -79,6 +80,49 @@ func (r *Repository) FindByUserIDAndDate(
 			&res.Name,
 			&res.Description,
 			&res.DueDate,
+			&res.IsArchive,
+			&res.CreatedAt,
+			&res.UpdatedAt,
+		); err != nil {
+			return nil, fmt.Errorf("rows.Scan: %w", err)
+		}
+		response = append(response, res)
+	}
+
+	return &response, nil
+}
+
+func (r *Repository) FindArchive(
+	ctx context.Context,
+	userID string,
+) (*[]entities.RepositoryTaskEntity, error) {
+	query, args, err := r.builder.
+		Select(lib.StructToKeysAndValues(
+			&entities.RepositoryTaskEntity{}, false, false,
+		).Keys...).
+		From("task").
+		Where("user_id = ? AND is_archive = TRUE", userID).
+		OrderBy("due_date DESC").
+		ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("builder: %w", err)
+	}
+
+	var response []entities.RepositoryTaskEntity
+	rows, err := r.conn.Query(ctx, query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("conn.Query: %w", err)
+	}
+
+	for rows.Next() {
+		var res entities.RepositoryTaskEntity
+		if err = rows.Scan(
+			&res.ID,
+			&res.UserID,
+			&res.Name,
+			&res.Description,
+			&res.DueDate,
+			&res.IsArchive,
 			&res.CreatedAt,
 			&res.UpdatedAt,
 		); err != nil {

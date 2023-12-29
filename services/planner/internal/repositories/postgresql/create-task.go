@@ -42,6 +42,7 @@ func (r *Repository) CreateTask(
 		&response.Name,
 		&response.Description,
 		&dueDate,
+		&response.IsArchive,
 		&response.CreatedAt,
 		&response.UpdatedAt,
 	); err != nil {

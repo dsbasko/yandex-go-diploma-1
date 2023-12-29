@@ -186,7 +186,7 @@ func TestService_FindToday(t *testing.T) {
 			repoConf: func() {
 				repo.EXPECT().
 					FindByUserIDAndDate(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
-					Return(&[]entities.RepositoryTaskEntity{}, nil)
+					Return(nil, nil)
 			},
 		},
 		{
@@ -211,6 +211,89 @@ func TestService_FindToday(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.repoConf()
 			response, err := service.FindToday(tt.ctx, tt.userID)
+
+			if tt.wantRes != nil && response != nil && response.Total != 0 && tt.wantRes.Total != 0 {
+				assert.Equal(t, response, tt.wantRes)
+			}
+			assert.Equal(t, err, tt.wantErr)
+		})
+	}
+}
+
+func TestService_FindArchive(t *testing.T) {
+	ctx := context.Background()
+	log := logger.NewMock()
+	repo := repositories.NewMock(t)
+	service := NewService(log, repo)
+
+	tests := []struct {
+		name     string
+		ctx      context.Context
+		userID   string
+		wantRes  *api.GetTasksResponseV1
+		wantErr  error
+		repoConf func()
+	}{
+		{
+			name:     "Arguments Not Filled",
+			ctx:      nil,
+			repoConf: func() {},
+			wantErr:  ErrArgumentsNotFilled,
+		},
+		{
+			name:     "Empty UserID",
+			ctx:      ctx,
+			repoConf: func() {},
+			wantErr:  ErrEmptyUserID,
+		},
+		{
+			name:   "Not Found",
+			ctx:    ctx,
+			userID: "42",
+			repoConf: func() {
+				repo.EXPECT().
+					FindArchive(gomock.Any(), gomock.Any()).
+					Return(nil, nil)
+			},
+			wantRes: &api.GetTasksResponseV1{
+				Data:  []api.GetTaskResponseV1{},
+				Total: 0,
+			},
+		},
+		{
+			name:   "Found",
+			ctx:    ctx,
+			userID: "42",
+			repoConf: func() {
+				repo.EXPECT().
+					FindArchive(gomock.Any(), gomock.Any()).
+					Return(&[]entities.RepositoryTaskEntity{
+						{
+							ID:          "42",
+							UserID:      "42",
+							Name:        "test",
+							Description: "test",
+						},
+					}, nil)
+			},
+			wantRes: &api.GetTasksResponseV1{
+				Data: []api.GetTaskResponseV1{
+					{
+						ID:          "42",
+						UserID:      "42",
+						Name:        "test",
+						Description: "test",
+					},
+				},
+				Total: 0,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.repoConf()
+			response, err := service.FindArchive(tt.ctx, tt.userID)
 
 			if tt.wantRes != nil && response != nil && response.Total != 0 && tt.wantRes.Total != 0 {
 				assert.Equal(t, response, tt.wantRes)

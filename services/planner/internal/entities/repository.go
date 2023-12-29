@@ -10,6 +10,7 @@ type RepositoryTaskEntity struct {
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	DueDate     time.Time `json:"due_date"`
+	IsArchive   bool      `json:"is_archive"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }

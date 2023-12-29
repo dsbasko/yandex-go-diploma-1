@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"sync"
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	"github.com/dsbasko/yandex-go-diploma-1/core/rmq"
@@ -12,17 +13,26 @@ import (
 	"github.com/rabbitmq/amqp091-go"
 )
 
-func Validation(ctx context.Context, log *logger.Logger, jwtService *jwt.Service, conn *rmq.Connector) error {
+func Validation(ctx context.Context, mu *sync.Mutex, log *logger.Logger, jwtService *jwt.Service, conn *rmq.Connector) error {
 	var request api.JWTValidationRequestV1
 	var response api.JWTValidationResponseV1
 	var replyMsg amqp091.Publishing
+	mu.Lock()
 
 	replyFn := func(msg amqp091.Delivery) {
+		defer func() {
+			request = api.JWTValidationRequestV1{}
+			response = api.JWTValidationResponseV1{}
+			replyMsg = amqp091.Publishing{}
+			mu.Unlock()
+		}()
+
 		body, err := json.Marshal(response)
 		if err != nil {
 			log.Errorf("json.Marshal: %v", err)
 			return
 		}
+		fmt.Println("-> -> body", string(body))
 
 		replyMsg.Body = body
 		if err = conn.SimplePublishReply(ctx, &rmq.SimplePublisherReplyConfig{
@@ -50,6 +60,8 @@ func Validation(ctx context.Context, log *logger.Logger, jwtService *jwt.Service
 		}
 		response = *validate
 	}
+
+	fmt.Println(response)
 
 	err := conn.SimpleConsume(ctx, &rmq.SimpleConsumeConfig{
 		Exchange:  api.AMQPExchange,
