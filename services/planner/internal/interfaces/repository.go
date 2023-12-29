@@ -14,6 +14,6 @@ type Repository interface {
 	Ping(ctx context.Context) error
 	CreateTask(ctx context.Context, dto *api.CreateTaskRequestV1) (*entities.RepositoryTaskEntity, error)
 	FindByID(ctx context.Context, userID, id string) (*entities.RepositoryTaskEntity, error)
-	FindByUserIDAndDate(ctx context.Context, userID string, dateStart, dateEnd time.Time) (*[]entities.RepositoryTaskEntity, error)
+	FindByUserIDAndDate(ctx context.Context, userID string, dateStart, dateEnd *time.Time) (*[]entities.RepositoryTaskEntity, error)
 	FindArchive(ctx context.Context, userID string) (*[]entities.RepositoryTaskEntity, error)
 }

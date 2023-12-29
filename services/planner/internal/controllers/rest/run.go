@@ -36,6 +36,7 @@ func RunController(
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Get("/{id}", h.GetByID)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Get("/today", h.GetToday)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Get("/week", h.GetWeek)
+	handler.With(coreMiddleware.CheckAuth(log, adapter)).Get("/undated", h.GetUndated)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Get("/archive", h.GetArchive)
 
 	routes := handler.Routes()

@@ -2,6 +2,7 @@ package postgresql
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
@@ -28,12 +29,13 @@ func (r *Repository) FindByID(
 	var response entities.RepositoryTaskEntity
 	row := r.conn.QueryRow(ctx, query, args...)
 
+	var dueDate sql.NullTime
 	if err = row.Scan(
 		&response.ID,
 		&response.UserID,
 		&response.Name,
 		&response.Description,
-		&response.DueDate,
+		&dueDate,
 		&response.IsArchive,
 		&response.CreatedAt,
 		&response.UpdatedAt,
@@ -43,28 +45,47 @@ func (r *Repository) FindByID(
 		}
 		return nil, fmt.Errorf("row.Scan: %w", err)
 	}
+	response.DueDate = dueDate.Time
 
 	return &response, nil
 }
 
 func (r *Repository) FindByUserIDAndDate(
 	ctx context.Context,
-	userID string, dateStart, dateEnd time.Time,
+	userID string, dateStart, dateEnd *time.Time,
 ) (*[]entities.RepositoryTaskEntity, error) {
+	var whereQuery any
+	var whereArgs []any
+
+	switch {
+	case dateStart == nil && dateEnd == nil:
+		whereQuery = "user_id = ? AND due_date IS NULL"
+		whereArgs = []any{userID}
+	case dateStart == nil:
+		whereQuery = "user_id = ? AND due_date <= ?"
+		whereArgs = []any{userID, dateEnd}
+	case dateEnd == nil:
+		whereQuery = "user_id = ? AND due_date >= ?"
+		whereArgs = []any{userID, dateStart}
+	default:
+		whereQuery = "user_id = ? AND due_date >= ? AND due_date <= ?"
+		whereArgs = []any{userID, dateStart, dateEnd}
+	}
+
 	query, args, err := r.builder.
 		Select(lib.StructToKeysAndValues(
 			&entities.RepositoryTaskEntity{}, false, false,
 		).Keys...).
 		From("task").
-		Where(
-			"user_id = ? AND due_date >= ? AND due_date <= ?",
-			userID, dateStart, dateEnd,
-		).
+		Where(whereQuery, whereArgs...).
 		OrderBy("due_date ASC").
 		ToSql()
 	if err != nil {
 		return nil, fmt.Errorf("builder: %w", err)
 	}
+
+	fmt.Println("query", query)
+	fmt.Println("args", args)
 
 	var response []entities.RepositoryTaskEntity
 	rows, err := r.conn.Query(ctx, query, args...)
@@ -74,18 +95,20 @@ func (r *Repository) FindByUserIDAndDate(
 
 	for rows.Next() {
 		var res entities.RepositoryTaskEntity
+		var dueDate sql.NullTime
 		if err = rows.Scan(
 			&res.ID,
 			&res.UserID,
 			&res.Name,
 			&res.Description,
-			&res.DueDate,
+			&dueDate,
 			&res.IsArchive,
 			&res.CreatedAt,
 			&res.UpdatedAt,
 		); err != nil {
 			return nil, fmt.Errorf("rows.Scan: %w", err)
 		}
+		res.DueDate = dueDate.Time
 		response = append(response, res)
 	}
 
@@ -116,18 +139,20 @@ func (r *Repository) FindArchive(
 
 	for rows.Next() {
 		var res entities.RepositoryTaskEntity
+		var dueDate sql.NullTime
 		if err = rows.Scan(
 			&res.ID,
 			&res.UserID,
 			&res.Name,
 			&res.Description,
-			&res.DueDate,
+			&dueDate,
 			&res.IsArchive,
 			&res.CreatedAt,
 			&res.UpdatedAt,
 		); err != nil {
 			return nil, fmt.Errorf("rows.Scan: %w", err)
 		}
+		res.DueDate = dueDate.Time
 		response = append(response, res)
 	}
 

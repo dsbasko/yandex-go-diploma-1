@@ -48,7 +48,6 @@ func (r *Repository) CreateTask(
 	); err != nil {
 		return nil, fmt.Errorf("conn.QueryRow: row.Scan: %w", err)
 	}
-
 	response.DueDate = dueDate.Time
 
 	return &response, nil

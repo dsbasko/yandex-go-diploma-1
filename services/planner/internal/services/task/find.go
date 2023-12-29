@@ -59,7 +59,7 @@ func (s *Service) FindToday(ctx context.Context, userID string) (*api.GetTasksRe
 	dateStart := time.Now().Truncate(24 * time.Hour) //nolint:gomnd
 	dateEnd := dateStart.Add(24*time.Hour - time.Nanosecond)
 
-	repoResponse, err := s.repo.FindByUserIDAndDate(ctx, userID, dateStart, dateEnd)
+	repoResponse, err := s.repo.FindByUserIDAndDate(ctx, userID, &dateStart, &dateEnd)
 	if err != nil {
 		return nil, fmt.Errorf("repo.CreateTask: %w", err)
 	}
@@ -107,7 +107,50 @@ func (s *Service) FindWeek(ctx context.Context, userID string) (*api.GetTasksRes
 	startOfWeek := now.AddDate(0, 0, -weekday+1).Truncate(24 * time.Hour)         //nolint:gomnd
 	endOfWeek := startOfWeek.AddDate(0, 0, 6).Add(24*time.Hour - time.Nanosecond) //nolint:gomnd
 
-	repoResponse, err := s.repo.FindByUserIDAndDate(ctx, userID, startOfWeek, endOfWeek)
+	repoResponse, err := s.repo.FindByUserIDAndDate(ctx, userID, &startOfWeek, &endOfWeek)
+	if err != nil {
+		return nil, fmt.Errorf("repo.CreateTask: %w", err)
+	}
+
+	if repoResponse == nil {
+		return &api.GetTasksResponseV1{
+			Data:  nil,
+			Total: 0,
+		}, nil
+	}
+
+	var response []api.GetTaskResponseV1
+	for _, resp := range *repoResponse {
+		response = append(response, api.GetTaskResponseV1{
+			ID:          resp.ID,
+			UserID:      resp.UserID,
+			Name:        resp.Name,
+			Description: resp.Description,
+			DueDate:     resp.DueDate,
+			IsArchive:   resp.IsArchive,
+			CreatedAt:   resp.CreatedAt,
+			UpdatedAt:   resp.UpdatedAt,
+		})
+	}
+
+	return &api.GetTasksResponseV1{
+		Data:  response,
+		Total: len(response),
+	}, nil
+}
+
+func (s *Service) FindUndated(ctx context.Context, userID string) (*api.GetTasksResponseV1, error) {
+	if ctx == nil {
+		return nil, ErrArgumentsNotFilled
+	}
+
+	switch {
+	case userID == "":
+		return nil, ErrEmptyUserID
+	default:
+	}
+
+	repoResponse, err := s.repo.FindByUserIDAndDate(ctx, userID, nil, nil)
 	if err != nil {
 		return nil, fmt.Errorf("repo.CreateTask: %w", err)
 	}

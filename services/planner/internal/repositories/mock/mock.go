@@ -83,7 +83,7 @@ func (mr *MockRepositoryMockRecorder) FindByID(arg0, arg1, arg2 interface{}) *go
 }
 
 // FindByUserIDAndDate mocks base method.
-func (m *MockRepository) FindByUserIDAndDate(arg0 context.Context, arg1 string, arg2, arg3 time.Time) (*[]entities.RepositoryTaskEntity, error) {
+func (m *MockRepository) FindByUserIDAndDate(arg0 context.Context, arg1 string, arg2, arg3 *time.Time) (*[]entities.RepositoryTaskEntity, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByUserIDAndDate", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(*[]entities.RepositoryTaskEntity)

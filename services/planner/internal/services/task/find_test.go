@@ -346,6 +346,132 @@ func TestService_FindWeek(t *testing.T) {
 	}
 }
 
+func TestService_FindUndated(t *testing.T) {
+	ctx := context.Background()
+	log := logger.NewMock()
+	repo := repositories.NewMock(t)
+	service := NewService(log, repo)
+
+	tests := []struct {
+		name     string
+		ctx      context.Context
+		userID   string
+		wantRes  *api.GetTasksResponseV1
+		wantErr  error
+		repoConf func()
+	}{
+		{
+			name:   "Found Once",
+			ctx:    ctx,
+			userID: "42",
+			wantRes: &api.GetTasksResponseV1{
+				Data: []api.GetTaskResponseV1{
+					{
+						ID:          "42",
+						UserID:      "42",
+						Name:        "test",
+						Description: "test",
+					},
+				},
+				Total: 1,
+			},
+			wantErr: nil,
+			repoConf: func() {
+				repo.EXPECT().
+					FindByUserIDAndDate(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+					Return(&[]entities.RepositoryTaskEntity{
+						{
+							ID:          "42",
+							UserID:      "42",
+							Name:        "test",
+							Description: "test",
+						},
+					}, nil)
+			},
+		},
+		{
+			name:   "Found Many",
+			ctx:    ctx,
+			userID: "42",
+			wantRes: &api.GetTasksResponseV1{
+				Data: []api.GetTaskResponseV1{
+					{
+						ID:          "42",
+						UserID:      "42",
+						Name:        "test",
+						Description: "test",
+					},
+					{
+						ID:          "43",
+						UserID:      "42",
+						Name:        "test",
+						Description: "test",
+					},
+				},
+				Total: 2,
+			},
+			wantErr: nil,
+			repoConf: func() {
+				repo.EXPECT().
+					FindByUserIDAndDate(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+					Return(&[]entities.RepositoryTaskEntity{
+						{
+							ID:          "42",
+							UserID:      "42",
+							Name:        "test",
+							Description: "test",
+						}, {
+							ID:          "43",
+							UserID:      "42",
+							Name:        "test",
+							Description: "test",
+						},
+					}, nil)
+			},
+		},
+		{
+			name:    "Not Found",
+			ctx:     ctx,
+			userID:  "42",
+			wantRes: &api.GetTasksResponseV1{},
+			wantErr: nil,
+			repoConf: func() {
+				repo.EXPECT().
+					FindByUserIDAndDate(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+					Return(nil, nil)
+			},
+		},
+		{
+			name:     "Arguments Not Filled",
+			ctx:      nil,
+			userID:   "",
+			wantRes:  nil,
+			wantErr:  ErrArgumentsNotFilled,
+			repoConf: func() {},
+		},
+		{
+			name:     "Empty UserID",
+			ctx:      ctx,
+			userID:   "",
+			wantRes:  nil,
+			wantErr:  ErrEmptyUserID,
+			repoConf: func() {},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.repoConf()
+			response, err := service.FindUndated(tt.ctx, tt.userID)
+
+			if tt.wantRes != nil && response != nil && response.Total != 0 && tt.wantRes.Total != 0 {
+				assert.Equal(t, response, tt.wantRes)
+			}
+			assert.Equal(t, err, tt.wantErr)
+		})
+	}
+}
+
 func TestService_FindArchive(t *testing.T) {
 	ctx := context.Background()
 	log := logger.NewMock()
