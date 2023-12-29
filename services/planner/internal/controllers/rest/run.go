@@ -9,7 +9,7 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/core/rmq"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/config"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/controllers/rest/handles"
-	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/interfaces"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/services/task"
 
 	"github.com/go-chi/chi/v5"
@@ -18,7 +18,7 @@ import (
 func RunController(
 	ctx context.Context,
 	log *logger.Logger,
-	repo domain.Repository,
+	repo interfaces.Repository,
 	adapter *rmq.Connector,
 	taskService *task.Service,
 ) error {
@@ -33,6 +33,7 @@ func RunController(
 
 	handler.Get("/ping", h.Ping)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Post("/", h.CreateTask)
+	handler.With(coreMiddleware.CheckAuth(log, adapter)).Get("/{id}", h.GetByID)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Get("/today", h.GetToday)
 
 	routes := handler.Routes()

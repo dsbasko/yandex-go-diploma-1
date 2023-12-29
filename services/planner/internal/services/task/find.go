@@ -8,7 +8,43 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/pkg/api"
 )
 
-func (s *Service) FindToday(ctx context.Context, userID string) (*api.GetTodayResponseV1, error) {
+func (s *Service) FindByID(
+	ctx context.Context,
+	userID, id string,
+) (*api.GetTaskResponseV1, error) {
+	if ctx == nil {
+		return nil, ErrArgumentsNotFilled
+	}
+
+	switch {
+	case userID == "":
+		return nil, ErrEmptyUserID
+	case id == "":
+		return nil, ErrEmptyID
+	default:
+	}
+
+	resp, err := s.repo.FindByID(ctx, userID, id)
+	if err != nil {
+		return nil, fmt.Errorf("repo.FindByID: %w", err)
+	}
+
+	if resp == nil {
+		return nil, nil
+	}
+
+	return &api.GetTaskResponseV1{
+		ID:          resp.ID,
+		UserID:      resp.UserID,
+		Name:        resp.Name,
+		Description: resp.Description,
+		DueDate:     resp.DueDate,
+		CreatedAt:   resp.CreatedAt,
+		UpdatedAt:   resp.UpdatedAt,
+	}, nil
+}
+
+func (s *Service) FindToday(ctx context.Context, userID string) (*api.GetTasksResponseV1, error) {
 	if ctx == nil {
 		return nil, ErrArgumentsNotFilled
 	}
@@ -28,10 +64,10 @@ func (s *Service) FindToday(ctx context.Context, userID string) (*api.GetTodayRe
 		return nil, fmt.Errorf("repo.CreateTask: %w", err)
 	}
 
-	var response []api.GetTodayResponseV1Data
+	var response []api.GetTaskResponseV1
 	for _, resp := range *repoResponse {
-		response = append(response, api.GetTodayResponseV1Data{
-			UUID:        resp.ID,
+		response = append(response, api.GetTaskResponseV1{
+			ID:          resp.ID,
 			UserID:      resp.UserID,
 			Name:        resp.Name,
 			Description: resp.Description,
@@ -41,7 +77,7 @@ func (s *Service) FindToday(ctx context.Context, userID string) (*api.GetTodayRe
 		})
 	}
 
-	return &api.GetTodayResponseV1{
+	return &api.GetTasksResponseV1{
 		Data:  response,
 		Total: len(response),
 	}, nil

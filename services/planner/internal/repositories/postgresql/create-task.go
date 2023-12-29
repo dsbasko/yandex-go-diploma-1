@@ -7,14 +7,14 @@ import (
 	"strings"
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
-	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/entities"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/pkg/api"
 )
 
 func (r *Repository) CreateTask(
 	ctx context.Context,
 	dto *api.CreateTaskRequestV1,
-) (*domain.RepositoryTaskEntity, error) {
+) (*entities.RepositoryTaskEntity, error) {
 	dtoKeysAndValues := lib.StructToKeysAndValues(dto, true, true)
 
 	query, args, err := r.builder.
@@ -23,7 +23,7 @@ func (r *Repository) CreateTask(
 		Values(dtoKeysAndValues.Values...).
 		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(
 			lib.StructToKeysAndValues(
-				&domain.RepositoryTaskEntity{},
+				&entities.RepositoryTaskEntity{},
 				false, false,
 			).Keys,
 			",",
@@ -33,7 +33,7 @@ func (r *Repository) CreateTask(
 		return nil, fmt.Errorf("squirrel.ToSql: %w", err)
 	}
 
-	var response domain.RepositoryTaskEntity
+	var response entities.RepositoryTaskEntity
 	var dueDate sql.NullTime
 	row := r.conn.QueryRow(ctx, query, args...)
 	if err = row.Scan(

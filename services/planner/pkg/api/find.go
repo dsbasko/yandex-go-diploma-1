@@ -1,18 +1,10 @@
 package api
 
-import "time"
+import "github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/entities"
 
-type GetTodayResponseV1 struct {
-	Data  []GetTodayResponseV1Data `json:"data,omitempty"`
-	Total int                      `json:"total"`
+type GetTasksResponseV1 struct {
+	Data  []GetTaskResponseV1 `json:"data"`
+	Total int                 `json:"total"`
 }
 
-type GetTodayResponseV1Data struct {
-	UUID        string    `json:"uuid"`
-	UserID      string    `json:"user_id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	DueDate     time.Time `json:"due_date"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
-}
+type GetTaskResponseV1 entities.RepositoryTaskEntity

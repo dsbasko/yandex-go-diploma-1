@@ -7,6 +7,7 @@ import (
 
 var (
 	ErrArgumentsNotFilled = errors.New("not all arguments are filled in")
+	ErrEmptyID            = errors.New("empty id")
 	ErrEmptyUserID        = errors.New("empty user id")
 
 	ErrNameMinLength = fmt.Errorf("name must be at least %v characters long", NameMinLength)

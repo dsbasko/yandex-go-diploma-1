@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
-	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/entities"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/repositories"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/pkg/api"
 	"github.com/golang/mock/gomock"
@@ -34,14 +34,14 @@ func TestService_Create(t *testing.T) {
 				Description: "test description",
 			},
 			wantRes: &api.CreateTaskResponseV1{
-				UUID: "42",
+				ID:   "42",
 				Name: "test task",
 			},
 			wantErr: nil,
 			repoConf: func() {
 				repo.EXPECT().
 					CreateTask(gomock.Any(), gomock.Any()).
-					Return(&domain.RepositoryTaskEntity{
+					Return(&entities.RepositoryTaskEntity{
 						ID:          "42",
 						Name:        "test task",
 						Description: "test description",

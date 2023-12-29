@@ -10,6 +10,6 @@ type CreateTaskRequestV1 struct {
 }
 
 type CreateTaskResponseV1 struct {
-	UUID string `json:"uuid"`
+	ID   string `json:"id"`
 	Name string `json:"name"`
 }

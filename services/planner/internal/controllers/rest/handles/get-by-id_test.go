@@ -16,19 +16,16 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
-func TestHandler_CreateTask(t *testing.T) {
+func TestHandler_GetByID(t *testing.T) {
 	log := logger.NewMock()
 	repo := repositories.NewMock(t)
 	taskService := task.NewService(log, repo)
 
 	router := chi.NewRouter()
 	h := New(log, repo, taskService)
-	router.
-		With(coreMiddleware.CheckAuthMock("42")).
-		Post("/", h.CreateTask)
+	router.With(coreMiddleware.CheckAuthMock("42")).Get("/{id}", h.GetByID)
 
 	ts := httptest.NewServer(router)
 	defer ts.Close()
@@ -37,63 +34,61 @@ func TestHandler_CreateTask(t *testing.T) {
 		name           string
 		token          string
 		contentType    string
-		body           api.CreateTaskRequestV1
+		id             string
 		wantStatusCode int
 		wantBody       func() string
 		repoCfg        func()
 	}{
 		{
 			name:           "Empty Auth Token",
+			id:             "42",
 			wantStatusCode: http.StatusUnauthorized,
 			repoCfg:        func() {},
 			wantBody:       func() string { return "" },
 		},
 		{
 			name:           "Invalid Auth Token",
+			id:             "42",
 			token:          "43",
 			wantStatusCode: http.StatusUnauthorized,
 			repoCfg:        func() {},
 			wantBody:       func() string { return "" },
 		},
 		{
-			name:           "Wrong Content-Type",
+			name:           "Not Found",
+			id:             "42",
 			token:          "42",
-			contentType:    "application/json",
-			wantStatusCode: http.StatusBadRequest,
-			repoCfg:        func() {},
-			wantBody:       func() string { return "" },
-		},
-		{
-			name:           "Empty Body",
-			token:          "42",
-			contentType:    "application/json",
-			wantStatusCode: http.StatusBadRequest,
-			repoCfg:        func() {},
-			wantBody:       func() string { return "" },
-		},
-		{
-			name:        "Success",
-			token:       "42",
-			contentType: "application/json",
-			body: api.CreateTaskRequestV1{
-				Name:        "test task",
-				Description: "test description",
-			},
-			wantStatusCode: http.StatusCreated,
-			wantBody: func() string {
-				response, _ := json.Marshal(api.CreateTaskResponseV1{
-					ID:   "42",
-					Name: "test task",
-				})
-				return string(response)
-			},
+			wantStatusCode: http.StatusNoContent,
 			repoCfg: func() {
 				repo.EXPECT().
-					CreateTask(gomock.Any(), gomock.Any()).
+					FindByID(gomock.Any(), gomock.Any(), gomock.Any()).
+					Return(nil, nil)
+			},
+			wantBody: func() string { return "" },
+		},
+		{
+			name:           "Found",
+			id:             "42",
+			token:          "42",
+			wantStatusCode: http.StatusOK,
+			repoCfg: func() {
+				repo.EXPECT().
+					FindByID(gomock.Any(), gomock.Any(), gomock.Any()).
 					Return(&entities.RepositoryTaskEntity{
-						ID:   "42",
-						Name: "test task",
+						ID:          "42",
+						UserID:      "42",
+						Name:        "test task",
+						Description: "test description",
 					}, nil)
+			},
+			wantBody: func() string {
+				response, _ := json.Marshal(api.GetTaskResponseV1{
+					ID:          "42",
+					UserID:      "42",
+					Name:        "test task",
+					Description: "test description",
+				})
+				return string(response)
 			},
 		},
 	}
@@ -101,15 +96,10 @@ func TestHandler_CreateTask(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.repoCfg()
-			bodyBytes, err := json.Marshal(tt.body)
-			require.Nil(t, err)
-
 			resp, body := test.Request(t, ts, &test.RequestArgs{
-				Method:      "POST",
-				Path:        "/",
-				JWTToken:    tt.token,
-				ContentType: tt.contentType,
-				Body:        bodyBytes,
+				Method:   "GET",
+				Path:     "/" + tt.id,
+				JWTToken: tt.token,
 			})
 			defer resp.Body.Close()
 

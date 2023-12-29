@@ -9,7 +9,7 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	coreMiddleware "github.com/dsbasko/yandex-go-diploma-1/core/rest/middleware"
 	"github.com/dsbasko/yandex-go-diploma-1/core/test"
-	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/entities"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/repositories"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/services/task"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/pkg/api"
@@ -58,7 +58,7 @@ func TestHandler_GetToday(t *testing.T) {
 			repoCfg: func() {
 				repo.EXPECT().
 					FindByUserIDAndDate(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
-					Return(&[]domain.RepositoryTaskEntity{
+					Return(&[]entities.RepositoryTaskEntity{
 						{
 							ID:          "42",
 							UserID:      "42",
@@ -68,10 +68,10 @@ func TestHandler_GetToday(t *testing.T) {
 					}, nil)
 			},
 			wantBody: func() string {
-				response, _ := json.Marshal(api.GetTodayResponseV1{
-					Data: []api.GetTodayResponseV1Data{
+				response, _ := json.Marshal(api.GetTasksResponseV1{
+					Data: []api.GetTaskResponseV1{
 						{
-							UUID:        "42",
+							ID:          "42",
 							UserID:      "42",
 							Name:        "test task",
 							Description: "test description",
@@ -89,7 +89,7 @@ func TestHandler_GetToday(t *testing.T) {
 			repoCfg: func() {
 				repo.EXPECT().
 					FindByUserIDAndDate(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
-					Return(&[]domain.RepositoryTaskEntity{}, nil)
+					Return(&[]entities.RepositoryTaskEntity{}, nil)
 			},
 			wantBody: func() string { return "[]" },
 		},

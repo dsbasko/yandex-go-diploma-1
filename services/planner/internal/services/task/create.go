@@ -28,7 +28,7 @@ func (s *Service) Create(ctx context.Context, dto *api.CreateTaskRequestV1) (*ap
 	}
 
 	return &api.CreateTaskResponseV1{
-		UUID: response.ID,
+		ID:   response.ID,
 		Name: response.Name,
 	}, nil
 }
