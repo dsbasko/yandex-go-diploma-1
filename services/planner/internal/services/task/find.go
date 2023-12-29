@@ -182,6 +182,50 @@ func (s *Service) FindUndated(ctx context.Context, userID string) (*api.GetTasks
 	}, nil
 }
 
+func (s *Service) FindOverdue(ctx context.Context, userID string) (*api.GetTasksResponseV1, error) {
+	if ctx == nil {
+		return nil, ErrArgumentsNotFilled
+	}
+
+	switch {
+	case userID == "":
+		return nil, ErrEmptyUserID
+	default:
+	}
+
+	now := time.Now()
+	repoResponse, err := s.repo.FindByUserIDAndDate(ctx, userID, nil, &now)
+	if err != nil {
+		return nil, fmt.Errorf("repo.CreateTask: %w", err)
+	}
+
+	if repoResponse == nil {
+		return &api.GetTasksResponseV1{
+			Data:  nil,
+			Total: 0,
+		}, nil
+	}
+
+	var response []api.GetTaskResponseV1
+	for _, resp := range *repoResponse {
+		response = append(response, api.GetTaskResponseV1{
+			ID:          resp.ID,
+			UserID:      resp.UserID,
+			Name:        resp.Name,
+			Description: resp.Description,
+			DueDate:     resp.DueDate,
+			IsArchive:   resp.IsArchive,
+			CreatedAt:   resp.CreatedAt,
+			UpdatedAt:   resp.UpdatedAt,
+		})
+	}
+
+	return &api.GetTasksResponseV1{
+		Data:  response,
+		Total: len(response),
+	}, nil
+}
+
 func (s *Service) FindArchive(ctx context.Context, userID string) (*api.GetTasksResponseV1, error) {
 	if ctx == nil {
 		return nil, ErrArgumentsNotFilled
