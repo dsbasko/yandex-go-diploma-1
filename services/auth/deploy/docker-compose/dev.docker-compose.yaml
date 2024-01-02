@@ -2,7 +2,7 @@ version: '3'
 
 services:
   auth:
-    restart: "no"
+    restart: on-failure
     build:
       context: ../../../../
       dockerfile: ./services/auth/deploy/docker/dev.Dockerfile
@@ -13,8 +13,15 @@ services:
       - ../../../planner:/services/planner
 
   auth_db:
+    restart: "no"
     build:
       context: ../../
       dockerfile: ./deploy/docker/psql.Dockerfile
     ports:
       - "${AUTH_PSQL_PORT}:${AUTH_PSQL_PORT}"
+
+  auth_db_migrator:
+    restart: on-failure
+    build:
+      context: ../../
+      dockerfile: ./deploy/docker/migrator.Dockerfile
