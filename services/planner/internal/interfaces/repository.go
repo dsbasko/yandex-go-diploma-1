@@ -16,4 +16,5 @@ type Repository interface {
 	FindByID(ctx context.Context, userID, id string) (*entities.RepositoryTaskEntity, error)
 	FindByUserIDAndDate(ctx context.Context, userID string, dateStart, dateEnd *time.Time) (*[]entities.RepositoryTaskEntity, error)
 	FindArchive(ctx context.Context, userID string) (*[]entities.RepositoryTaskEntity, error)
+	DeleteByID(ctx context.Context, userID, id string) error
 }

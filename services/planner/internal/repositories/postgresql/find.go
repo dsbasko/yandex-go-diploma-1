@@ -20,7 +20,7 @@ func (r *Repository) FindByID(
 			&entities.RepositoryTaskEntity{}, false, false,
 		).Keys...).
 		From("task").
-		Where("user_id = ? and id = ?", userID, id).
+		Where("user_id = ? AND id = ?", userID, id).
 		ToSql()
 	if err != nil {
 		return nil, fmt.Errorf("builder: %w", err)
@@ -83,9 +83,6 @@ func (r *Repository) FindByUserIDAndDate(
 	if err != nil {
 		return nil, fmt.Errorf("builder: %w", err)
 	}
-
-	fmt.Println("query", query)
-	fmt.Println("args", args)
 
 	var response []entities.RepositoryTaskEntity
 	rows, err := r.conn.Query(ctx, query, args...)

@@ -32,7 +32,6 @@ func Validation(ctx context.Context, mu *sync.Mutex, log *logger.Logger, jwtServ
 			log.Errorf("json.Marshal: %v", err)
 			return
 		}
-		fmt.Println("-> -> body", string(body))
 
 		replyMsg.Body = body
 		if err = conn.SimplePublishReply(ctx, &rmq.SimplePublisherReplyConfig{
@@ -60,8 +59,6 @@ func Validation(ctx context.Context, mu *sync.Mutex, log *logger.Logger, jwtServ
 		}
 		response = *validate
 	}
-
-	fmt.Println(response)
 
 	err := conn.SimpleConsume(ctx, &rmq.SimpleConsumeConfig{
 		Exchange:  api.AMQPExchange,
