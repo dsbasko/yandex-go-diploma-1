@@ -37,19 +37,19 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 	return m.recorder
 }
 
-// CreateTask mocks base method.
-func (m *MockRepository) CreateTask(arg0 context.Context, arg1 *api.CreateTaskRequestV1) (*entities.RepositoryTaskEntity, error) {
+// Create mocks base method.
+func (m *MockRepository) Create(arg0 context.Context, arg1 *api.CreateTaskRequestV1) (*entities.RepositoryTaskEntity, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateTask", arg0, arg1)
+	ret := m.ctrl.Call(m, "Create", arg0, arg1)
 	ret0, _ := ret[0].(*entities.RepositoryTaskEntity)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// CreateTask indicates an expected call of CreateTask.
-func (mr *MockRepositoryMockRecorder) CreateTask(arg0, arg1 interface{}) *gomock.Call {
+// Create indicates an expected call of Create.
+func (mr *MockRepositoryMockRecorder) Create(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTask", reflect.TypeOf((*MockRepository)(nil).CreateTask), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRepository)(nil).Create), arg0, arg1)
 }
 
 // DeleteByID mocks base method.
@@ -123,4 +123,19 @@ func (m *MockRepository) Ping(arg0 context.Context) error {
 func (mr *MockRepositoryMockRecorder) Ping(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ping", reflect.TypeOf((*MockRepository)(nil).Ping), arg0)
+}
+
+// UpdateOnce mocks base method.
+func (m *MockRepository) UpdateOnce(arg0 context.Context, arg1, arg2 string, arg3 *api.UpdateTaskRequestV1) (*entities.RepositoryTaskEntity, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateOnce", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*entities.RepositoryTaskEntity)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateOnce indicates an expected call of UpdateOnce.
+func (mr *MockRepositoryMockRecorder) UpdateOnce(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOnce", reflect.TypeOf((*MockRepository)(nil).UpdateOnce), arg0, arg1, arg2, arg3)
 }

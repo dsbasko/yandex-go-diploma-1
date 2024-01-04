@@ -22,9 +22,9 @@ func (s *Service) Create(ctx context.Context, dto *api.CreateTaskRequestV1) (*ap
 	default:
 	}
 
-	response, err := s.repo.CreateTask(ctx, dto)
+	response, err := s.repo.Create(ctx, dto)
 	if err != nil {
-		return nil, fmt.Errorf("repo.CreateTask: %w", err)
+		return nil, fmt.Errorf("repo.Create: %w", err)
 	}
 
 	return &api.CreateTaskResponseV1{

@@ -63,4 +63,5 @@ flowchart LR
 - `get` `/planner/archive` Получение задач в архиве
 - `patch` `/planner/{id}` Изменение задачи
 - `patch` `/planner/{id}/done` Завершение задачи и добавление её в архив
+- `patch` `/planner/{id}/due` Изменяет время выполнения
 - `delete` `/planner/{id}` Удаление задачи

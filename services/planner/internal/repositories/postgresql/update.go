@@ -11,16 +11,21 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/pkg/api"
 )
 
-func (r *Repository) CreateTask(
+func (r *Repository) UpdateOnce(
 	ctx context.Context,
-	dto *api.CreateTaskRequestV1,
+	userID, id string,
+	dto *api.UpdateTaskRequestV1,
 ) (*entities.RepositoryTaskEntity, error) {
 	dtoKeysAndValues := lib.StructToKeysAndValues(dto, true, true)
+	setMap := map[string]any{}
+	for i, key := range dtoKeysAndValues.Keys {
+		setMap[key] = dtoKeysAndValues.Values[i]
+	}
 
 	query, args, err := r.builder.
-		Insert("task").
-		Columns(dtoKeysAndValues.Keys...).
-		Values(dtoKeysAndValues.Values...).
+		Update("task").
+		SetMap(setMap).
+		Where("user_id = ? AND id = ?", userID, id).
 		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(
 			lib.StructToKeysAndValues(
 				&entities.RepositoryTaskEntity{},

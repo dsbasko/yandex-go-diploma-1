@@ -19,7 +19,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestHandler_CreateTask(t *testing.T) {
+func TestHandler_UpdateTask(t *testing.T) {
 	log := logger.NewMock()
 	repo := repositories.NewMock(t)
 	taskService := task.NewService(log, repo)
@@ -28,7 +28,7 @@ func TestHandler_CreateTask(t *testing.T) {
 	h := New(log, repo, taskService)
 	router.
 		With(coreMiddleware.CheckAuthMock("42")).
-		Post("/", h.CreateTask)
+		Patch("/{id}", h.UpdateTask)
 
 	ts := httptest.NewServer(router)
 	defer ts.Close()
@@ -37,7 +37,8 @@ func TestHandler_CreateTask(t *testing.T) {
 		name           string
 		token          string
 		contentType    string
-		body           api.CreateTaskRequestV1
+		id             string
+		body           *api.UpdateTaskRequestV1
 		wantStatusCode int
 		wantBody       func() string
 		repoCfg        func()
@@ -45,20 +46,29 @@ func TestHandler_CreateTask(t *testing.T) {
 		{
 			name:           "Empty Auth Token",
 			wantStatusCode: http.StatusUnauthorized,
+			id:             "42",
 			repoCfg:        func() {},
 			wantBody:       func() string { return "" },
 		},
 		{
 			name:           "Invalid Auth Token",
 			token:          "43",
+			id:             "42",
 			wantStatusCode: http.StatusUnauthorized,
 			repoCfg:        func() {},
 			wantBody:       func() string { return "" },
 		},
 		{
+			name:           "Empty ID",
+			token:          "42",
+			wantStatusCode: http.StatusNotFound,
+			repoCfg:        func() {},
+			wantBody:       func() string { return "404 page not found\n" },
+		},
+		{
 			name:           "Wrong Content-Type",
 			token:          "42",
-			contentType:    "application/json",
+			id:             "42",
 			wantStatusCode: http.StatusBadRequest,
 			repoCfg:        func() {},
 			wantBody:       func() string { return "" },
@@ -66,33 +76,38 @@ func TestHandler_CreateTask(t *testing.T) {
 		{
 			name:           "Empty Body",
 			token:          "42",
+			id:             "42",
 			contentType:    "application/json",
 			wantStatusCode: http.StatusBadRequest,
+			body:           nil,
 			repoCfg:        func() {},
 			wantBody:       func() string { return "" },
 		},
 		{
 			name:        "Success",
 			token:       "42",
+			id:          "42",
 			contentType: "application/json",
-			body: api.CreateTaskRequestV1{
-				Name:        "test task",
+			body: &api.UpdateTaskRequestV1{
+				Name:        "test name",
 				Description: "test description",
 			},
-			wantStatusCode: http.StatusCreated,
+			wantStatusCode: http.StatusOK,
 			wantBody: func() string {
-				response, _ := json.Marshal(api.CreateTaskResponseV1{
-					ID:   "42",
-					Name: "test task",
+				response, _ := json.Marshal(api.UpdateTaskResponseV1{
+					ID:          "42",
+					Name:        "test name",
+					Description: "test description",
 				})
 				return string(response)
 			},
 			repoCfg: func() {
 				repo.EXPECT().
-					Create(gomock.Any(), gomock.Any()).
+					UpdateOnce(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 					Return(&entities.RepositoryTaskEntity{
-						ID:   "42",
-						Name: "test task",
+						ID:          "42",
+						Name:        "test name",
+						Description: "test description",
 					}, nil)
 			},
 		},
@@ -101,12 +116,16 @@ func TestHandler_CreateTask(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.repoCfg()
-			bodyBytes, err := json.Marshal(tt.body)
+			var bodyBytes []byte
+			var err error
+			if tt.body != nil {
+				bodyBytes, err = json.Marshal(tt.body)
+			}
 			require.Nil(t, err)
 
 			resp, body := test.Request(t, ts, &test.RequestArgs{
-				Method:      "POST",
-				Path:        "/",
+				Method:      "PATCH",
+				Path:        "/" + tt.id,
 				JWTToken:    tt.token,
 				ContentType: tt.contentType,
 				Body:        bodyBytes,

@@ -34,6 +34,7 @@ func RunController(
 	handler.Get("/ping", h.Ping)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Post("/", h.CreateTask)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Get("/{id}", h.GetByID)
+	handler.With(coreMiddleware.CheckAuth(log, adapter)).Patch("/{id}", h.UpdateTask)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Delete("/{id}", h.DeleteByID)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Get("/today", h.GetToday)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Get("/week", h.GetWeek)
