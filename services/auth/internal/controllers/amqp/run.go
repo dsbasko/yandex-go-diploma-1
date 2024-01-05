@@ -3,6 +3,7 @@ package amqp
 import (
 	"context"
 	"fmt"
+	"sync"
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	"github.com/dsbasko/yandex-go-diploma-1/core/rmq"
@@ -17,6 +18,8 @@ func RunController(
 	log *logger.Logger,
 	jwtService *jwt.Service,
 ) (func(), error) {
+	mu := sync.Mutex{}
+
 	conn, err := rmq.Connect(ctx, log, config.GetRmqConnectingString())
 	if err != nil {
 		return func() {}, err
@@ -36,7 +39,7 @@ func RunController(
 		return connClose, fmt.Errorf("conn.ExchangeDeclare: %w", err)
 	}
 
-	err = consumers.Validation(ctx, log, jwtService, conn)
+	err = consumers.Validation(ctx, &mu, log, jwtService, conn)
 	if err != nil {
 		return connClose, fmt.Errorf("consumers.Validation: %w", err)
 	}

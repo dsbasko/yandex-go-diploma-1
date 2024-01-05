@@ -62,5 +62,6 @@ flowchart LR
 - `get` `/planner/overdue` Получение списка просроченных задач
 - `get` `/planner/archive` Получение задач в архиве
 - `patch` `/planner/{id}` Изменение задачи
-- `patch` `/planner/done/{id}` Завершение задачи и добавление её в архив
+- `patch` `/planner/{id}/done` Завершение задачи и добавление её в архив
+- `patch` `/planner/{id}/due_date` Изменяет время выполнения
 - `delete` `/planner/{id}` Удаление задачи

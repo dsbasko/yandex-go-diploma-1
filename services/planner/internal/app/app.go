@@ -5,8 +5,11 @@ import (
 	"fmt"
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
+	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/adapters/rmq"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/config"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/controllers/rest"
+	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/repositories"
+	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/services/task"
 )
 
 func Run() error {
@@ -23,10 +26,22 @@ func Run() error {
 		return fmt.Errorf("logger.NewLogger: %w", err)
 	}
 
+	repo, err := repositories.NewRepository(ctx)
+	if err != nil {
+		return fmt.Errorf("repositories.NewRepository: %w", err)
+	}
+
+	adapter, err := rmq.RunAdapter(ctx, log)
+	if err != nil {
+		return fmt.Errorf("rmq.RunAdapter: %w", err)
+	}
+
+	taskService := task.NewService(log, repo)
+
 	// HTTP REST триггер
 	errRestCh := make(chan error)
 	go func() {
-		if err = rest.RunController(ctx, log); err != nil {
+		if err = rest.RunController(ctx, log, repo, adapter, taskService); err != nil {
 			errRestCh <- fmt.Errorf("rest.Run: %v", err)
 		}
 	}()

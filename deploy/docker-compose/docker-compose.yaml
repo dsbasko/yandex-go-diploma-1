@@ -120,6 +120,20 @@ services:
       POSTGRES_DB: ${PLANNER_PSQL_DB}
       PGPORT: ${PLANNER_PSQL_PORT}
 
+  planner_db_migrator:
+    container_name: ${PLANNER_PSQL_MIGRATOR_CONTAINER_NAME}
+    extends:
+      file: ../../services/planner/deploy/docker-compose/${ENV}.docker-compose.yaml
+      service: planner_db_migrator
+    networks:
+      - yandex-diploma-1
+    environment:
+      PSQL_CONTAINER_NAME: ${PLANNER_PSQL_CONTAINER_NAME}
+      PSQL_DB: ${PLANNER_PSQL_DB}
+      PSQL_USER: ${PLANNER_PSQL_USER}
+      PSQL_PASS: ${PLANNER_PSQL_PASS}
+      PSQL_PORT: ${PLANNER_PSQL_PORT}
+
   # Notification Service
   notification:
     container_name: ${NOTIFICATION_CONTAINER_NAME}

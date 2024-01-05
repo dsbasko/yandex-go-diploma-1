@@ -85,6 +85,7 @@ func GetRmqConnectingString() string {
 		cfg.RmqPort,
 	)
 }
+
 func GetPsqlMaxPools() int32 {
 	return cfg.PsqlMaxPools
 }
