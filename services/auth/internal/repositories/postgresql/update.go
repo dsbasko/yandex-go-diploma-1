@@ -23,7 +23,7 @@ func (r *Repository) UpdateOnce(
 		setMap[key] = dtoValues[i]
 	}
 
-	entityKeys, _, err := structs.ToKeysAndValues(domain.RepositoryAccountEntity{}, true, nil)
+	entityKeys, _, err := structs.ToKeysAndValues(domain.RepositoryAccountEntity{}, false, nil)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}

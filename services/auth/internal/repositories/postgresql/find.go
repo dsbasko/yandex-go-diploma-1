@@ -12,7 +12,7 @@ func (r *Repository) FindByID(
 	ctx context.Context,
 	id string,
 ) (*domain.RepositoryAccountEntity, error) {
-	entityKeys, _, err := structs.ToKeysAndValues(domain.RepositoryAccountEntity{}, true, nil)
+	entityKeys, _, err := structs.ToKeysAndValues(domain.RepositoryAccountEntity{}, false, nil)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
@@ -48,7 +48,7 @@ func (r *Repository) FindByUsername(
 	ctx context.Context,
 	username string,
 ) (*domain.RepositoryAccountEntity, error) {
-	entityKeys, _, err := structs.ToKeysAndValues(domain.RepositoryAccountEntity{}, true, nil)
+	entityKeys, _, err := structs.ToKeysAndValues(domain.RepositoryAccountEntity{}, false, nil)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}

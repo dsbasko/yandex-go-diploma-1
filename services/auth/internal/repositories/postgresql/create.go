@@ -19,7 +19,7 @@ func (r *Repository) CreateOnce(
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
 
-	entityKeys, _, err := structs.ToKeysAndValues(dto, true, nil)
+	entityKeys, _, err := structs.ToKeysAndValues(domain.RepositoryAccountEntity{}, false, nil)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}

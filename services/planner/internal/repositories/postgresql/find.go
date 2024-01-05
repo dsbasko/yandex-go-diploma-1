@@ -15,7 +15,7 @@ func (r *Repository) FindByID(
 	ctx context.Context,
 	userID, id string,
 ) (*entities.RepositoryTaskEntity, error) {
-	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, true, nil)
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, false, nil)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
@@ -75,7 +75,7 @@ func (r *Repository) FindByUserIDAndDate(
 		whereArgs = []any{userID, dateStart, dateEnd}
 	}
 
-	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, true, nil)
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, false, nil)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
@@ -122,7 +122,7 @@ func (r *Repository) FindArchive(
 	ctx context.Context,
 	userID string,
 ) (*[]entities.RepositoryTaskEntity, error) {
-	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, true, nil)
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, false, nil)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}

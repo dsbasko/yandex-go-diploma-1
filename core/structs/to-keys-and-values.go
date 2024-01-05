@@ -15,6 +15,10 @@ func ToKeysAndValues(
 	err error,
 ) {
 	v := reflect.ValueOf(data)
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem()
+	}
+
 	if v.Kind() != reflect.Struct {
 		err = ErrNotStruct
 		return keys, values, err

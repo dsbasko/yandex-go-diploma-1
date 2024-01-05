@@ -27,7 +27,7 @@ func (r *Repository) UpdateOnce(
 		setMap[key] = dtoValues[i]
 	}
 
-	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, true, nil)
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, false, nil)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
@@ -67,7 +67,7 @@ func (r *Repository) UpdateIsArchive(
 	userID, id string,
 	isArchive bool,
 ) (*entities.RepositoryTaskEntity, error) {
-	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, true, nil)
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, false, nil)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
@@ -116,7 +116,7 @@ func (r *Repository) UpdateDueDate(
 		dueDateVal = &dueDate
 	}
 
-	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, true, nil)
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, false, nil)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}

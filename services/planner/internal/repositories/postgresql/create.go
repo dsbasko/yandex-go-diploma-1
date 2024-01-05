@@ -20,7 +20,7 @@ func (r *Repository) Create(
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
 
-	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, true, &[]string{"id"})
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, false, nil)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
