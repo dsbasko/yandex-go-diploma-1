@@ -29,8 +29,6 @@ services:
   # Auth Service
   auth:
     container_name: ${AUTH_CONTAINER_NAME}
-    env_file:
-      - ../../env/.env
     extends:
       file: ../../services/auth/deploy/docker-compose/${ENV}.docker-compose.yaml
       service: auth
@@ -52,6 +50,10 @@ services:
       PSQL_MAX_RETRIES: ${AUTH_PSQL_MAX_RETRIES}
       PSQL_RETRY_TIMEOUT: ${AUTH_PSQL_RETRY_TIMEOUT}
       RMQ_HOST: ${RMQ_CONTAINER_NAME}
+      RMQ_PORT: ${RMQ_PORT}
+      RMQ_PORT_WEB: ${RMQ_PORT_WEB}
+      RMQ_AUTH_USER: ${RMQ_AUTH_USER}
+      RMQ_AUTH_PASS: ${RMQ_AUTH_PASS}
       RMQ_MAX_RETRIES: ${AUTH_RMQ_MAX_RETRIES}
       RMQ_RETRY_TIMEOUT: ${AUTH_RMQ_RETRY_TIMEOUT}
     depends_on:
@@ -88,8 +90,6 @@ services:
   # Planner Service
   planner:
     container_name: ${PLANNER_CONTAINER_NAME}
-    env_file:
-      - ../../env/.env
     extends:
       file: ../../services/planner/deploy/docker-compose/${ENV}.docker-compose.yaml
       service: planner
@@ -109,6 +109,10 @@ services:
       PSQL_MAX_RETRIES: ${PLANNER_PSQL_MAX_RETRIES}
       PSQL_RETRY_TIMEOUT: ${PLANNER_PSQL_RETRY_TIMEOUT}
       RMQ_HOST: ${RMQ_CONTAINER_NAME}
+      RMQ_PORT: ${RMQ_PORT}
+      RMQ_PORT_WEB: ${RMQ_PORT_WEB}
+      RMQ_AUTH_USER: ${RMQ_AUTH_USER}
+      RMQ_AUTH_PASS: ${RMQ_AUTH_PASS}
       RMQ_MAX_RETRIES: ${PLANNER_RMQ_MAX_RETRIES}
       RMQ_RETRY_TIMEOUT: ${PLANNER_RMQ_RETRY_TIMEOUT}
     depends_on:
@@ -145,8 +149,6 @@ services:
   # Notification Service
   notification:
     container_name: ${NOTIFICATION_CONTAINER_NAME}
-    env_file:
-      - ../../env/.env
     extends:
       file: ../../services/notification/deploy/docker-compose/${ENV}.docker-compose.yaml
       service: notification
@@ -166,6 +168,10 @@ services:
       PSQL_MAX_RETRIES: ${NOTIFICATION_PSQL_MAX_RETRIES}
       PSQL_RETRY_TIMEOUT: ${NOTIFICATION_PSQL_RETRY_TIMEOUT}
       RMQ_HOST: ${RMQ_CONTAINER_NAME}
+      RMQ_PORT: ${RMQ_PORT}
+      RMQ_PORT_WEB: ${RMQ_PORT_WEB}
+      RMQ_AUTH_USER: ${RMQ_AUTH_USER}
+      RMQ_AUTH_PASS: ${RMQ_AUTH_PASS}
       RMQ_MAX_RETRIES: ${NOTIFICATION_RMQ_MAX_RETRIES}
       RMQ_RETRY_TIMEOUT: ${NOTIFICATION_RMQ_RETRY_TIMEOUT}
     depends_on:
