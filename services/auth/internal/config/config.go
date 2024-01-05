@@ -22,12 +22,14 @@ type config struct {
 	RmqAuthUser string `env:"RMQ_AUTH_USER"`
 	RmqAuthPass string `env:"RMQ_AUTH_PASS"`
 
-	PsqlHost     string `env:"PSQL_HOST"`
-	PsqlPort     string `env:"PSQL_PORT"`
-	PsqlUser     string `env:"PSQL_USER"`
-	PsqlPass     string `env:"PSQL_PASS"`
-	PsqlDB       string `env:"PSQL_DB"`
-	PsqlMaxPools int32  `env:"PSQL_MAX_POOLS"`
+	PsqlHost         string `env:"PSQL_HOST"`
+	PsqlPort         string `env:"PSQL_PORT"`
+	PsqlUser         string `env:"PSQL_USER"`
+	PsqlPass         string `env:"PSQL_PASS"`
+	PsqlDB           string `env:"PSQL_DB"`
+	PsqlMaxPools     int32  `env:"PSQL_MAX_POOLS"`
+	PsqlMaxRetries   int    `env:"PSQL_MAX_RETRIES"`
+	PsqlRetryTimeout int    `env:"PSQL_RETRY_TIMEOUT"`
 }
 
 var (
@@ -88,6 +90,14 @@ func GetRmqConnectingString() string {
 
 func GetPsqlMaxPools() int32 {
 	return cfg.PsqlMaxPools
+}
+
+func GetPsqlMaxRetries() int {
+	return cfg.PsqlMaxRetries
+}
+
+func GetPsqlRetryTimeout() time.Duration {
+	return time.Duration(cfg.PsqlRetryTimeout) * time.Millisecond
 }
 
 func GetPsqlConnectingString() string {

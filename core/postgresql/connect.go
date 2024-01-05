@@ -9,35 +9,42 @@ import (
 )
 
 type Config struct {
-	MaxConns        int32
-	MaxConnIdleTime time.Duration
+	MaxConns     int32
+	MaxRetries   int
+	RetryTimeOut time.Duration
 }
 
-const MaxRetries int = 10
-const RetryTimeOut time.Duration = 3 * time.Second
-
 func Connect(ctx context.Context, dsn string, options Config) (*pgxpool.Pool, error) {
+	switch {
+	case options.MaxConns == 0:
+		return nil, ErrMaxConnsNotFilled
+	case options.MaxRetries == 0:
+		return nil, ErrMaxRetriesNotFilled
+	case options.RetryTimeOut == 0:
+		return nil, ErrRetryTimeOutNotFilled
+	default:
+	}
+
 	cfg, err := pgxpool.ParseConfig(dsn)
 	if err != nil {
 		return nil, fmt.Errorf("pgxpool.ParseConfig: %w", err)
 	}
 
 	cfg.MaxConns = options.MaxConns
-	cfg.MaxConnIdleTime = options.MaxConnIdleTime
 
 	connect, err := pgxpool.NewWithConfig(ctx, cfg)
 	if err != nil {
 		return nil, fmt.Errorf("pgxpool.NewWithConfig: %w", err)
 	}
 
-	for i := 0; i < MaxRetries; i++ {
+	for i := 0; i < options.MaxRetries; i++ {
 		if err = connect.Ping(ctx); err != nil {
 			if err == nil {
 				break
-			} else if i == MaxRetries-1 {
+			} else if i == options.MaxRetries-1 {
 				return nil, fmt.Errorf("conn.Ping: %w", err)
 			}
-			time.Sleep(RetryTimeOut)
+			time.Sleep(options.RetryTimeOut)
 		}
 	}
 

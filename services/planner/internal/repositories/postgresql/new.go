@@ -20,7 +20,9 @@ var _ interfaces.Repository = (*Repository)(nil)
 
 func NewRepository(ctx context.Context) (*Repository, error) {
 	conn, err := postgresql.Connect(ctx, config.GetPsqlConnectingString(), postgresql.Config{
-		MaxConns: config.GetPsqlMaxPools(),
+		MaxConns:     config.GetPsqlMaxPools(),
+		MaxRetries:   config.GetPsqlMaxRetries(),
+		RetryTimeOut: config.GetPsqlRetryTimeout(),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("postgresql.Connect: %w", err)
