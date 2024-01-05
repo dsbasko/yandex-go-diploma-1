@@ -5,14 +5,14 @@ import (
 	"fmt"
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/structs"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/entities"
 )
 
 func (r *Repository) FindByID(
 	ctx context.Context,
 	id string,
-) (*domain.RepositoryAccountEntity, error) {
-	entityKeys, _, err := structs.ToKeysAndValues(domain.RepositoryAccountEntity{}, false, nil)
+) (*entities.RepositoryAccountEntity, error) {
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryAccountEntity{}, false, nil)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
@@ -26,7 +26,7 @@ func (r *Repository) FindByID(
 		return nil, fmt.Errorf("squirrel.ToSql: %w", err)
 	}
 
-	var response domain.RepositoryAccountEntity
+	var response entities.RepositoryAccountEntity
 	row := r.conn.QueryRow(ctx, query, args...)
 	if err = row.Scan(
 		&response.ID,
@@ -47,8 +47,8 @@ func (r *Repository) FindByID(
 func (r *Repository) FindByUsername(
 	ctx context.Context,
 	username string,
-) (*domain.RepositoryAccountEntity, error) {
-	entityKeys, _, err := structs.ToKeysAndValues(domain.RepositoryAccountEntity{}, false, nil)
+) (*entities.RepositoryAccountEntity, error) {
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryAccountEntity{}, false, nil)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
@@ -62,7 +62,7 @@ func (r *Repository) FindByUsername(
 		return nil, fmt.Errorf("squirrel.ToSql: %w", err)
 	}
 
-	var response domain.RepositoryAccountEntity
+	var response entities.RepositoryAccountEntity
 	row := r.conn.QueryRow(ctx, query, args...)
 	if err = row.Scan(
 		&response.ID,

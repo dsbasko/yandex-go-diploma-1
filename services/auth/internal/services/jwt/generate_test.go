@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/entities"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/repositories"
 	"github.com/stretchr/testify/assert"
 )
@@ -17,13 +17,13 @@ func TestService_Generate(t *testing.T) {
 
 	tests := []struct {
 		name    string
-		dto     *domain.RepositoryAccountEntity
+		dto     *entities.RepositoryAccountEntity
 		wantJWT bool
 		wantErr bool
 	}{
 		{
 			name: "Success",
-			dto: &domain.RepositoryAccountEntity{
+			dto: &entities.RepositoryAccountEntity{
 				ID:        "42",
 				Username:  "test",
 				Password:  "test",

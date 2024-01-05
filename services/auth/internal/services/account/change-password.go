@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/entities"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 )
 
@@ -39,7 +39,7 @@ func (s *Service) ChangePassword(
 		return nil, fmt.Errorf("passwordEncode: %w", err)
 	}
 
-	response, err := s.repo.UpdateOnce(ctx, &domain.RepositoryAccountEntity{
+	response, err := s.repo.UpdateOnce(ctx, &entities.RepositoryAccountEntity{
 		ID:       userID,
 		Password: passHash,
 	})

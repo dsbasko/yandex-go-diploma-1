@@ -9,7 +9,7 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/config"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/controllers/rest/handles"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/controllers/rest/middlewares"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/interfaces"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/services/account"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/services/jwt"
 	"github.com/go-chi/chi/v5"
@@ -18,7 +18,7 @@ import (
 func RunController(
 	ctx context.Context,
 	log *logger.Logger,
-	repo domain.Repository,
+	repo interfaces.Repository,
 	accountService *account.Service,
 	jwtService *jwt.Service,
 ) error {

@@ -5,13 +5,13 @@ import (
 	"time"
 
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/config"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/entities"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 	"github.com/golang-jwt/jwt/v4"
 )
 
 func (s *Service) Generate(
-	accountEntity *domain.RepositoryAccountEntity,
+	accountEntity *entities.RepositoryAccountEntity,
 ) (string, error) {
 	if accountEntity == nil {
 		return "", ErrArgumentsNotFilled

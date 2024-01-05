@@ -35,8 +35,8 @@ func Run() error {
 	accountService := account.NewService(log, repo)
 	jwtService := jwt.NewService(log, repo)
 
-	cancelServer, err := amqp.RunController(ctx, log, jwtService)
-	defer cancelServer()
+	amqpCancel, err := amqp.RunController(ctx, log, jwtService)
+	defer amqpCancel()
 	if err != nil {
 		return fmt.Errorf("amqp.RunController: %w", err)
 	}

@@ -6,13 +6,13 @@ import (
 	"strings"
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/structs"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/entities"
 )
 
 func (r *Repository) UpdateOnce(
 	ctx context.Context,
-	dto *domain.RepositoryAccountEntity,
-) (*domain.RepositoryAccountEntity, error) {
+	dto *entities.RepositoryAccountEntity,
+) (*entities.RepositoryAccountEntity, error) {
 	dtoKeys, dtoValues, err := structs.ToKeysAndValues(dto, true, &[]string{"id"})
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
@@ -23,7 +23,7 @@ func (r *Repository) UpdateOnce(
 		setMap[key] = dtoValues[i]
 	}
 
-	entityKeys, _, err := structs.ToKeysAndValues(domain.RepositoryAccountEntity{}, false, nil)
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryAccountEntity{}, false, nil)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
@@ -38,7 +38,7 @@ func (r *Repository) UpdateOnce(
 		return nil, fmt.Errorf("squirrel.ToSql: %w", err)
 	}
 
-	var response domain.RepositoryAccountEntity
+	var response entities.RepositoryAccountEntity
 	row := r.conn.QueryRow(ctx, query, args...)
 	if err = row.Scan(
 		&response.ID,

@@ -10,7 +10,7 @@ import (
 	coreErrors "github.com/dsbasko/yandex-go-diploma-1/core/errors"
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/config"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/entities"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/repositories"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 	"github.com/golang-jwt/jwt/v4"
@@ -25,7 +25,7 @@ func TestService_Validation(t *testing.T) {
 	service := NewService(log, repo)
 
 	config.SetJwtExp(time.Hour)
-	validToken, _ := service.Generate(&domain.RepositoryAccountEntity{
+	validToken, _ := service.Generate(&entities.RepositoryAccountEntity{
 		ID:        "42",
 		Username:  "test",
 		Password:  "test",
@@ -56,7 +56,7 @@ func TestService_Validation(t *testing.T) {
 			mockConfig: func() {
 				repo.EXPECT().
 					FindByUsername(gomock.Any(), gomock.Any()).
-					Return(&domain.RepositoryAccountEntity{ID: "42"}, nil)
+					Return(&entities.RepositoryAccountEntity{ID: "42"}, nil)
 			},
 		},
 		{

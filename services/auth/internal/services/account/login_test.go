@@ -7,7 +7,7 @@ import (
 
 	coreErrors "github.com/dsbasko/yandex-go-diploma-1/core/errors"
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/entities"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/repositories"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 	"github.com/golang/mock/gomock"
@@ -40,7 +40,7 @@ func TestService_Login(t *testing.T) {
 			mockConfig: func() {
 				repo.EXPECT().
 					FindByUsername(gomock.Any(), gomock.Any()).
-					Return(&domain.RepositoryAccountEntity{ID: "42", Password: hashedPassword}, nil)
+					Return(&entities.RepositoryAccountEntity{ID: "42", Password: hashedPassword}, nil)
 			},
 		},
 		{
@@ -73,7 +73,7 @@ func TestService_Login(t *testing.T) {
 			mockConfig: func() {
 				repo.EXPECT().
 					FindByUsername(gomock.Any(), gomock.Any()).
-					Return(&domain.RepositoryAccountEntity{ID: "42", Password: hashedPassword}, nil)
+					Return(&entities.RepositoryAccountEntity{ID: "42", Password: hashedPassword}, nil)
 			},
 		},
 	}

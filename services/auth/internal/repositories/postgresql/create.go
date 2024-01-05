@@ -6,20 +6,20 @@ import (
 	"strings"
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/structs"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/entities"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 )
 
 func (r *Repository) CreateOnce(
 	ctx context.Context,
 	dto *api.RegisterRequestV1,
-) (*domain.RepositoryAccountEntity, error) {
+) (*entities.RepositoryAccountEntity, error) {
 	dtoKeys, dtoValues, err := structs.ToKeysAndValues(dto, true, &[]string{"id"})
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
 
-	entityKeys, _, err := structs.ToKeysAndValues(domain.RepositoryAccountEntity{}, false, nil)
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryAccountEntity{}, false, nil)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
@@ -34,7 +34,7 @@ func (r *Repository) CreateOnce(
 		return nil, fmt.Errorf("squirrel.ToSql: %w", err)
 	}
 
-	var response domain.RepositoryAccountEntity
+	var response entities.RepositoryAccountEntity
 	row := r.conn.QueryRow(ctx, query, args...)
 	if err = row.Scan(
 		&response.ID,

@@ -7,7 +7,7 @@ import (
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/errors"
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/entities"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/repositories"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 	"github.com/golang/mock/gomock"
@@ -36,7 +36,7 @@ func TestService_Register(t *testing.T) {
 			wantRes: &api.RegisterResponseV1{UUID: "42"},
 			wantErr: nil,
 			mockConfig: func() {
-				repo.EXPECT().CreateOnce(gomock.Any(), gomock.Any()).Return(&domain.RepositoryAccountEntity{ID: "42"}, nil)
+				repo.EXPECT().CreateOnce(gomock.Any(), gomock.Any()).Return(&entities.RepositoryAccountEntity{ID: "42"}, nil)
 			},
 		},
 		{
