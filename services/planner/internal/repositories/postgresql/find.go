@@ -15,10 +15,13 @@ func (r *Repository) FindByID(
 	ctx context.Context,
 	userID, id string,
 ) (*entities.RepositoryTaskEntity, error) {
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, true, nil)
+	if err != nil {
+		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
+	}
+
 	query, args, err := r.builder.
-		Select(structs.ToKeysAndValues(
-			&entities.RepositoryTaskEntity{}, false, nil,
-		).Keys...).
+		Select(entityKeys...).
 		From("task").
 		Where("user_id = ? AND id = ?", userID, id).
 		ToSql()
@@ -72,10 +75,13 @@ func (r *Repository) FindByUserIDAndDate(
 		whereArgs = []any{userID, dateStart, dateEnd}
 	}
 
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, true, nil)
+	if err != nil {
+		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
+	}
+
 	query, args, err := r.builder.
-		Select(structs.ToKeysAndValues(
-			&entities.RepositoryTaskEntity{}, false, nil,
-		).Keys...).
+		Select(entityKeys...).
 		From("task").
 		Where(whereQuery, whereArgs...).
 		OrderBy("due_date ASC").
@@ -116,10 +122,13 @@ func (r *Repository) FindArchive(
 	ctx context.Context,
 	userID string,
 ) (*[]entities.RepositoryTaskEntity, error) {
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, true, nil)
+	if err != nil {
+		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
+	}
+
 	query, args, err := r.builder.
-		Select(structs.ToKeysAndValues(
-			&entities.RepositoryTaskEntity{}, false, nil,
-		).Keys...).
+		Select(entityKeys...).
 		From("task").
 		Where("user_id = ? AND is_archive = TRUE", userID).
 		OrderBy("due_date DESC").

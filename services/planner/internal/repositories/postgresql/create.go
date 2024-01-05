@@ -15,19 +15,21 @@ func (r *Repository) Create(
 	ctx context.Context,
 	dto *api.CreateTaskRequestV1,
 ) (*entities.RepositoryTaskEntity, error) {
-	dtoKeysAndValues := structs.ToKeysAndValues(dto, true, &[]string{"id"})
+	dtoKeys, dtoValues, err := structs.ToKeysAndValues(dto, true, &[]string{"id"})
+	if err != nil {
+		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
+	}
+
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, true, &[]string{"id"})
+	if err != nil {
+		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
+	}
 
 	query, args, err := r.builder.
 		Insert("task").
-		Columns(dtoKeysAndValues.Keys...).
-		Values(dtoKeysAndValues.Values...).
-		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(
-			structs.ToKeysAndValues(
-				&entities.RepositoryTaskEntity{},
-				false, nil,
-			).Keys,
-			",",
-		))).
+		Columns(dtoKeys...).
+		Values(dtoValues...).
+		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(entityKeys, ","))).
 		ToSql()
 	if err != nil {
 		return nil, fmt.Errorf("squirrel.ToSql: %w", err)

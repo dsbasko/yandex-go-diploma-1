@@ -12,10 +12,13 @@ func (r *Repository) FindByID(
 	ctx context.Context,
 	id string,
 ) (*domain.RepositoryAccountEntity, error) {
+	entityKeys, _, err := structs.ToKeysAndValues(domain.RepositoryAccountEntity{}, true, nil)
+	if err != nil {
+		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
+	}
+
 	query, args, err := r.builder.
-		Select(structs.ToKeysAndValues(
-			&domain.RepositoryAccountEntity{}, false, nil,
-		).Keys...).
+		Select(entityKeys...).
 		From("accounts").
 		Where("id = ?", id).
 		ToSql()
@@ -45,10 +48,13 @@ func (r *Repository) FindByUsername(
 	ctx context.Context,
 	username string,
 ) (*domain.RepositoryAccountEntity, error) {
+	entityKeys, _, err := structs.ToKeysAndValues(domain.RepositoryAccountEntity{}, true, nil)
+	if err != nil {
+		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
+	}
+
 	query, args, err := r.builder.
-		Select(structs.ToKeysAndValues(
-			&domain.RepositoryAccountEntity{}, false, nil,
-		).Keys...).
+		Select(entityKeys...).
 		From("accounts").
 		Where("username = ?", username).
 		ToSql()

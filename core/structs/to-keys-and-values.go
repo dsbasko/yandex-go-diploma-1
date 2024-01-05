@@ -5,15 +5,21 @@ import (
 	"slices"
 )
 
-type KeysAndValues struct {
-	Keys   []string
-	Values []any
-}
+func ToKeysAndValues(
+	data any,
+	ignoreEmpty bool,
+	ignoreFields *[]string,
+) (
+	keys []string,
+	values []any,
+	err error,
+) {
+	v := reflect.ValueOf(data)
+	if v.Kind() != reflect.Struct {
+		err = ErrNotStruct
+		return keys, values, err
+	}
 
-func ToKeysAndValues(data any, ignoreEmpty bool, ignoreFields *[]string) *KeysAndValues {
-	var res KeysAndValues
-
-	v := reflect.ValueOf(data).Elem()
 	t := v.Type()
 
 	for i := 0; i < v.NumField(); i++ {
@@ -32,9 +38,9 @@ func ToKeysAndValues(data any, ignoreEmpty bool, ignoreFields *[]string) *KeysAn
 			continue
 		}
 
-		res.Keys = append(res.Keys, tag)
-		res.Values = append(res.Values, value)
+		keys = append(keys, tag)
+		values = append(values, value)
 	}
 
-	return &res
+	return keys, values, err
 }

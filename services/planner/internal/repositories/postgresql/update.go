@@ -17,23 +17,26 @@ func (r *Repository) UpdateOnce(
 	userID, id string,
 	dto *api.UpdateTaskRequestV1,
 ) (*entities.RepositoryTaskEntity, error) {
-	dtoKeysAndValues := structs.ToKeysAndValues(dto, true, &[]string{"id", "is_archive", "due_date"})
+	dtoKeys, dtoValues, err := structs.ToKeysAndValues(dto, true, &[]string{"id", "is_archive", "due_date"})
+	if err != nil {
+		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
+	}
+
 	setMap := map[string]any{}
-	for i, key := range dtoKeysAndValues.Keys {
-		setMap[key] = dtoKeysAndValues.Values[i]
+	for i, key := range dtoKeys {
+		setMap[key] = dtoValues[i]
+	}
+
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, true, nil)
+	if err != nil {
+		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
 
 	query, args, err := r.builder.
 		Update("task").
 		SetMap(setMap).
 		Where("user_id = ? AND id = ?", userID, id).
-		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(
-			structs.ToKeysAndValues(
-				&entities.RepositoryTaskEntity{},
-				false, nil,
-			).Keys,
-			",",
-		))).
+		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(entityKeys, ","))).
 		ToSql()
 	if err != nil {
 		return nil, fmt.Errorf("squirrel.ToSql: %w", err)
@@ -64,17 +67,16 @@ func (r *Repository) UpdateIsArchive(
 	userID, id string,
 	isArchive bool,
 ) (*entities.RepositoryTaskEntity, error) {
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, true, nil)
+	if err != nil {
+		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
+	}
+
 	query, args, err := r.builder.
 		Update("task").
 		Set("is_archive", isArchive).
 		Where("user_id = ? AND id = ?", userID, id).
-		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(
-			structs.ToKeysAndValues(
-				&entities.RepositoryTaskEntity{},
-				false, nil,
-			).Keys,
-			",",
-		))).
+		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(entityKeys, ","))).
 		ToSql()
 	if err != nil {
 		return nil, fmt.Errorf("squirrel.ToSql: %w", err)
@@ -114,17 +116,16 @@ func (r *Repository) UpdateDueDate(
 		dueDateVal = &dueDate
 	}
 
+	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, true, nil)
+	if err != nil {
+		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
+	}
+
 	query, args, err := r.builder.
 		Update("task").
 		Set("due_date", dueDateVal).
 		Where("user_id = ? AND id = ?", userID, id).
-		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(
-			structs.ToKeysAndValues(
-				&entities.RepositoryTaskEntity{},
-				false, nil,
-			).Keys,
-			",",
-		))).
+		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(entityKeys, ","))).
 		ToSql()
 	if err != nil {
 		return nil, fmt.Errorf("squirrel.ToSql: %w", err)

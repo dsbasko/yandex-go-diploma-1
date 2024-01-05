@@ -13,23 +13,26 @@ func (r *Repository) UpdateOnce(
 	ctx context.Context,
 	dto *domain.RepositoryAccountEntity,
 ) (*domain.RepositoryAccountEntity, error) {
-	dtoKeysAndValues := structs.ToKeysAndValues(dto, true, &[]string{"id"})
+	dtoKeys, dtoValues, err := structs.ToKeysAndValues(dto, true, &[]string{"id"})
+	if err != nil {
+		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
+	}
+
 	setMap := map[string]any{}
-	for i, key := range dtoKeysAndValues.Keys {
-		setMap[key] = dtoKeysAndValues.Values[i]
+	for i, key := range dtoKeys {
+		setMap[key] = dtoValues[i]
+	}
+
+	entityKeys, _, err := structs.ToKeysAndValues(domain.RepositoryAccountEntity{}, true, nil)
+	if err != nil {
+		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
 
 	query, args, err := r.builder.
 		Update("accounts").
 		SetMap(setMap).
 		Where("id = ?", dto.ID).
-		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(
-			structs.ToKeysAndValues(
-				&domain.RepositoryAccountEntity{},
-				false, nil,
-			).Keys,
-			",",
-		))).
+		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(entityKeys, ","))).
 		ToSql()
 	if err != nil {
 		return nil, fmt.Errorf("squirrel.ToSql: %w", err)
