@@ -10,7 +10,10 @@ import (
 )
 
 func RunAdapter(ctx context.Context, log *logger.Logger) (*rmq.Connector, error) {
-	conn, err := rmq.Connect(ctx, log, config.GetRmqConnectingString())
+	conn, err := rmq.Connect(ctx, log, config.GetRmqConnectingString(), rmq.ConnectorOptions{
+		MaxRetries:   config.GetRmqMaxRetries(),
+		RetryTimeOut: config.GetRmqRetryTimeout(),
+	})
 	if err != nil {
 		return nil, fmt.Errorf("rmq.Connect: %w", err)
 	}

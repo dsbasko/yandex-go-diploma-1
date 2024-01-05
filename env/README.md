@@ -34,8 +34,10 @@
 | `AUTH_PSQL_DB`                      | База данных                                                     |
 | `AUTH_PSQL_MAX_POOLS`               | Максимальное количество пулов для работы с базой данных         |
 | `AUTH_PSQL_MAX_RETRIES`             | Максимальное количество попыток соединения с базой данных       |
-| `AUTH_PSQL_RETRY_TIMEOUT_SECONDS`   | Задержка в миллисекундах между попытками повторного подключения |
+| `AUTH_PSQL_RETRY_TIMEOUT`           | Задержка в миллисекундах между попытками повторного подключения |
 | `AUTH_PSQL_MIGRATOR_CONTAINER_NAME` | Название контейнера для мигратора базы данных                   |
+| `AUTH_RMQ_MAX_RETRIES`              | Максимальное количество попыток соединения с RabbitMQ           |
+| `AUTH_RMQ_RETRY_TIMEOUT`            | Задержка в миллисекундах между попытками повторного подключения |
 | `AUTH_JWT_SECRET_KEY`               | Секретный ключ для генерации JWT токена                         |
 | `AUTH_JWT_EXP_MINUTES`              | Время жизни токена в минутах                                    |
 
@@ -56,24 +58,28 @@
 | `PLANNER_PSQL_DB`                      | База данных                                                     |
 | `PLANNER_PSQL_MAX_POOLS`               | Максимальное количество пулов для работы с базой данных         |
 | `PLANNER_PSQL_MAX_RETRIES`             | Максимальное количество попыток соединения с базой данных       |
-| `PLANNER_PSQL_RETRY_TIMEOUT_SECONDS`   | Задержка в миллисекундах между попытками повторного подключения |
+| `PLANNER_PSQL_RETRY_TIMEOUT`           | Задержка в миллисекундах между попытками повторного подключения |
 | `PLANNER_PSQL_MIGRATOR_CONTAINER_NAME` | Название контейнера для мигратора базы данных                   |
+| `PLANNER_RMQ_MAX_RETRIES`              | Максимальное количество попыток соединения с RabbitMQ           |
+| `PLANNER_RMQ_RETRY_TIMEOUT`            | Задержка в миллисекундах между попытками повторного подключения |
 
 <br>
 
 ## Notification service
 
-| Переменная                                | Описание                                                        |
-|-------------------------------------------|-----------------------------------------------------------------|
-| `NOTIFICATION_CONTAINER_NAME`             | Название контейнера сервиса                                     |
-| `NOTIFICATION_REST_READ_TIMEOUT`          | Таймаут http запроса на чтение                                  |
-| `NOTIFICATION_REST_WRITE_TIMEOUT`         | Таймаут http запроса за запись                                  |
-| `NOTIFICATION_PSQL_CONTAINER_NAME`        | Название контейнера базы данных для сервиса                     |
-| `NOTIFICATION_PSQL_HOST`                  | Хост подключения к базе данных                                  |
-| `NOTIFICATION_PSQL_PORT`                  | Порт подключения к базе данных                                  |
-| `NOTIFICATION_PSQL_USER`                  | Пользователь для подключения к базе данных                      |
-| `NOTIFICATION_PSQL_PASS`                  | Пароль для подключения к базе данных                            |
-| `NOTIFICATION_PSQL_DB`                    | База данных                                                     |
-| `NOTIFICATION_PSQL_MAX_POOLS`             | Максимальное количество пулов для работы с базой данных         |
-| `NOTIFICATION_PSQL_MAX_RETRIES`           | Максимальное количество попыток соединения с базой данных       |
-| `NOTIFICATION_PSQL_RETRY_TIMEOUT_SECONDS` | Задержка в миллисекундах между попытками повторного подключения |
+| Переменная                         | Описание                                                        |
+|------------------------------------|-----------------------------------------------------------------|
+| `NOTIFICATION_CONTAINER_NAME`      | Название контейнера сервиса                                     |
+| `NOTIFICATION_REST_READ_TIMEOUT`   | Таймаут http запроса на чтение                                  |
+| `NOTIFICATION_REST_WRITE_TIMEOUT`  | Таймаут http запроса за запись                                  |
+| `NOTIFICATION_PSQL_CONTAINER_NAME` | Название контейнера базы данных для сервиса                     |
+| `NOTIFICATION_PSQL_HOST`           | Хост подключения к базе данных                                  |
+| `NOTIFICATION_PSQL_PORT`           | Порт подключения к базе данных                                  |
+| `NOTIFICATION_PSQL_USER`           | Пользователь для подключения к базе данных                      |
+| `NOTIFICATION_PSQL_PASS`           | Пароль для подключения к базе данных                            |
+| `NOTIFICATION_PSQL_DB`             | База данных                                                     |
+| `NOTIFICATION_PSQL_MAX_POOLS`      | Максимальное количество пулов для работы с базой данных         |
+| `NOTIFICATION_PSQL_MAX_RETRIES`    | Максимальное количество попыток соединения с базой данных       |
+| `NOTIFICATION_PSQL_RETRY_TIMEOUT`  | Задержка в миллисекундах между попытками повторного подключения |
+| `NOTIFICATION_RMQ_MAX_RETRIES`     | Максимальное количество попыток соединения с RabbitMQ           |
+| `NOTIFICATION_RMQ_RETRY_TIMEOUT`   | Задержка в миллисекундах между попытками повторного подключения |

@@ -20,7 +20,10 @@ func RunController(
 ) (func(), error) {
 	mu := sync.Mutex{}
 
-	conn, err := rmq.Connect(ctx, log, config.GetRmqConnectingString())
+	conn, err := rmq.Connect(ctx, log, config.GetRmqConnectingString(), rmq.ConnectorOptions{
+		MaxRetries:   config.GetRmqMaxRetries(),
+		RetryTimeOut: config.GetRmqRetryTimeout(),
+	})
 	if err != nil {
 		return func() {}, err
 	}

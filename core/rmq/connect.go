@@ -10,17 +10,19 @@ import (
 	"github.com/rabbitmq/amqp091-go"
 )
 
-const MaxRetries int = 6
-const RetryTimeOut time.Duration = 5 * time.Second
-
 type Connector struct {
 	conn *amqp091.Connection
 	log  *logger.Logger
 	dsn  string
 }
 
-func Connect(ctx context.Context, log *logger.Logger, dsn string) (*Connector, error) {
-	conn, err := dial(ctx, dsn)
+type ConnectorOptions struct {
+	MaxRetries   int
+	RetryTimeOut time.Duration
+}
+
+func Connect(ctx context.Context, log *logger.Logger, dsn string, options ConnectorOptions) (*Connector, error) {
+	conn, err := dial(ctx, dsn, &options)
 	if err != nil {
 		return nil, fmt.Errorf("dial: %w", err)
 	}
@@ -30,13 +32,13 @@ func Connect(ctx context.Context, log *logger.Logger, dsn string) (*Connector, e
 		log:  log,
 		dsn:  dsn,
 	}
-	go connector.healthCheck(ctx)
+	go connector.healthCheck(ctx, &options)
 
 	return &connector, nil
 }
 
-func dial(ctx context.Context, dsn string) (*amqp091.Connection, error) {
-	for i := 0; i < MaxRetries; i++ {
+func dial(ctx context.Context, dsn string, options *ConnectorOptions) (*amqp091.Connection, error) {
+	for i := 0; i < options.MaxRetries; i++ {
 		select {
 		case <-ctx.Done():
 			return nil, ctx.Err()
@@ -48,18 +50,18 @@ func dial(ctx context.Context, dsn string) (*amqp091.Connection, error) {
 			return conn, nil
 		}
 
-		if i == MaxRetries-1 {
+		if i == options.MaxRetries-1 {
 			return nil, fmt.Errorf("amqp091.Dial: %w", err)
 		}
 
-		time.Sleep(RetryTimeOut)
+		time.Sleep(options.RetryTimeOut)
 	}
 
 	return nil, errors.New("unknown error")
 }
 
-func (c *Connector) healthCheck(ctx context.Context) {
-	ticker := time.NewTicker(RetryTimeOut)
+func (c *Connector) healthCheck(ctx context.Context, options *ConnectorOptions) {
+	ticker := time.NewTicker(options.RetryTimeOut)
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
@@ -69,7 +71,7 @@ func (c *Connector) healthCheck(ctx context.Context) {
 			return
 		case <-ticker.C:
 			if c.conn.IsClosed() {
-				conn, err := dial(ctx, c.dsn)
+				conn, err := dial(ctx, c.dsn, options)
 				if err != nil {
 					c.log.Errorf("dial: %v", err)
 					cancel()

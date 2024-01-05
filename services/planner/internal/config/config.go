@@ -15,10 +15,12 @@ type config struct {
 	RestReadTimeout  int `env:"REST_READ_TIMEOUT"`
 	RestWriteTimeout int `env:"REST_WRITE_TIMEOUT"`
 
-	RmqHost     string `env:"RMQ_HOST"`
-	RmqPort     string `env:"RMQ_PORT"`
-	RmqAuthUser string `env:"RMQ_AUTH_USER"`
-	RmqAuthPass string `env:"RMQ_AUTH_PASS"`
+	RmqHost         string `env:"RMQ_HOST"`
+	RmqPort         string `env:"RMQ_PORT"`
+	RmqAuthUser     string `env:"RMQ_AUTH_USER"`
+	RmqAuthPass     string `env:"RMQ_AUTH_PASS"`
+	RmqMaxRetries   int    `env:"RMQ_MAX_RETRIES"`
+	RmqRetryTimeout int    `env:"RMQ_RETRY_TIMEOUT"`
 
 	PsqlHost         string `env:"PSQL_HOST"`
 	PsqlPort         string `env:"PSQL_PORT"`
@@ -72,6 +74,14 @@ func GetRmqConnectingString() string {
 		cfg.RmqHost,
 		cfg.RmqPort,
 	)
+}
+
+func GetRmqMaxRetries() int {
+	return cfg.RmqMaxRetries
+}
+
+func GetRmqRetryTimeout() time.Duration {
+	return time.Duration(cfg.RmqRetryTimeout) * time.Millisecond
 }
 
 func GetPsqlMaxPools() int32 {
