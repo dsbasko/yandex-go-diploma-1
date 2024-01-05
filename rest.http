@@ -63,6 +63,24 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1M
   "description": "Description task 2"
 }
 
+### [planner]/ Помечание задачи как выполненной
+PATCH http://localhost/planner/1cc24a34-1a24-44c5-95f3-68bc0f387211/done
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1MDYsImlhdCI6MTcwNDM1MjkwNiwiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiM2M4NWRkYjUtYWJkZS00MzUyLTliYzYtMmQzYTRmMzYzOGUzIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.qnuR_kgHPpEWc_tPSKPEluTjN6zTCsU2NgWxLWFT1Ng
+
+{
+  "is_archive": true
+}
+
+### [planner]/ Изменение времени выполненеия задачи
+PATCH http://localhost/planner/1cc24a34-1a24-44c5-95f3-68bc0f387211/due_date
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1MDYsImlhdCI6MTcwNDM1MjkwNiwiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiM2M4NWRkYjUtYWJkZS00MzUyLTliYzYtMmQzYTRmMzYzOGUzIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.qnuR_kgHPpEWc_tPSKPEluTjN6zTCsU2NgWxLWFT1Ng
+
+{
+  "due_date": "2024-01-01T00:00:00Z"
+}
+
 ### [planner]/{id} Удаление задачи
 DELETE http://localhost/planner/archive
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1MDYsImlhdCI6MTcwNDM1MjkwNiwiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiM2M4NWRkYjUtYWJkZS00MzUyLTliYzYtMmQzYTRmMzYzOGUzIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.qnuR_kgHPpEWc_tPSKPEluTjN6zTCsU2NgWxLWFT1Ng
