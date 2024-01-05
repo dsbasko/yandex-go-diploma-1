@@ -9,8 +9,8 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func (h *Handler) UpdateIsArchive(w http.ResponseWriter, r *http.Request) {
-	var dto api.ChangeIsArchiveRequestV1
+func (h *Handler) UpdateDueDate(w http.ResponseWriter, r *http.Request) {
+	var dto api.ChangeDueDateRequestV1
 	defer r.Body.Close()
 
 	id := chi.URLParam(r, "id")
@@ -40,9 +40,9 @@ func (h *Handler) UpdateIsArchive(w http.ResponseWriter, r *http.Request) {
 
 	authPayload := coreMiddleware.GetAuthPayload(r.Context())
 
-	response, err := h.taskService.UpdateIsArchive(r.Context(), authPayload.UserID, id, &dto)
+	response, err := h.taskService.UpdateDueDate(r.Context(), authPayload.UserID, id, &dto)
 	if err != nil {
-		h.log.Errorf("taskService.UpdateIsArchive: %v", err)
+		h.log.Errorf("taskService.UpdateDueDate: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

@@ -36,6 +36,7 @@ func RunController(
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Get("/{id}", h.GetByID)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Patch("/{id}", h.UpdateOnce)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Patch("/{id}/done", h.UpdateIsArchive)
+	handler.With(coreMiddleware.CheckAuth(log, adapter)).Patch("/{id}/due_date", h.UpdateDueDate)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Delete("/{id}", h.DeleteByID)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Get("/today", h.GetToday)
 	handler.With(coreMiddleware.CheckAuth(log, adapter)).Get("/week", h.GetWeek)

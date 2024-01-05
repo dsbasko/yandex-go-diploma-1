@@ -44,8 +44,8 @@ func (s *Service) UpdateOnce(ctx context.Context, userID, id string, dto *api.Up
 func (s *Service) UpdateIsArchive(
 	ctx context.Context,
 	userID, id string,
-	dto *api.ArchiveTaskRequestV1,
-) (*api.ArchiveTaskResponseV1, error) {
+	dto *api.ChangeIsArchiveRequestV1,
+) (*api.ChangeIsArchiveResponseV1, error) {
 	if ctx == nil || dto == nil {
 		return nil, ErrArgumentsNotFilled
 	}
@@ -63,7 +63,41 @@ func (s *Service) UpdateIsArchive(
 		return nil, fmt.Errorf("repo.UpdateOnce: %w", err)
 	}
 
-	return &api.ArchiveTaskResponseV1{
+	return &api.ChangeIsArchiveResponseV1{
+		ID:          response.ID,
+		UserID:      response.UserID,
+		Name:        response.Name,
+		Description: response.Description,
+		DueDate:     response.DueDate,
+		IsArchive:   response.IsArchive,
+		CreatedAt:   response.CreatedAt,
+		UpdatedAt:   response.UpdatedAt,
+	}, nil
+}
+
+func (s *Service) UpdateDueDate(
+	ctx context.Context,
+	userID, id string,
+	dto *api.ChangeDueDateRequestV1,
+) (*api.ChangeDueDateResponseV1, error) {
+	if ctx == nil || dto == nil {
+		return nil, ErrArgumentsNotFilled
+	}
+
+	switch {
+	case userID == "":
+		return nil, ErrEmptyUserID
+	case id == "":
+		return nil, ErrEmptyID
+	default:
+	}
+
+	response, err := s.repo.UpdateDueDate(ctx, userID, id, dto.DueDate)
+	if err != nil {
+		return nil, fmt.Errorf("repo.UpdateOnce: %w", err)
+	}
+
+	return &api.ChangeDueDateResponseV1{
 		ID:          response.ID,
 		UserID:      response.UserID,
 		Name:        response.Name,

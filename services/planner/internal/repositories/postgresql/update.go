@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/entities"
@@ -79,9 +80,6 @@ func (r *Repository) UpdateIsArchive(
 		return nil, fmt.Errorf("squirrel.ToSql: %w", err)
 	}
 
-	fmt.Println("query", query)
-	fmt.Println("args", args)
-
 	var response entities.RepositoryTaskEntity
 	var dueDate sql.NullTime
 	row := r.conn.QueryRow(ctx, query, args...)
@@ -98,6 +96,56 @@ func (r *Repository) UpdateIsArchive(
 		return nil, fmt.Errorf("conn.QueryRow: row.Scan: %w", err)
 	}
 	response.DueDate = dueDate.Time
+
+	return &response, nil
+}
+
+func (r *Repository) UpdateDueDate(
+	ctx context.Context,
+	userID, id string,
+	dueDate time.Time,
+) (*entities.RepositoryTaskEntity, error) {
+	var (
+		dueDateVal *time.Time
+		zeroTime   time.Time
+	)
+
+	if dueDate != zeroTime {
+		dueDateVal = &dueDate
+	}
+
+	query, args, err := r.builder.
+		Update("task").
+		Set("due_date", dueDateVal).
+		Where("user_id = ? AND id = ?", userID, id).
+		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(
+			lib.StructToKeysAndValues(
+				&entities.RepositoryTaskEntity{},
+				false, false,
+			).Keys,
+			",",
+		))).
+		ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("squirrel.ToSql: %w", err)
+	}
+
+	var response entities.RepositoryTaskEntity
+	var dueDateNull sql.NullTime
+	row := r.conn.QueryRow(ctx, query, args...)
+	if err = row.Scan(
+		&response.ID,
+		&response.UserID,
+		&response.Name,
+		&response.Description,
+		&dueDateNull,
+		&response.IsArchive,
+		&response.CreatedAt,
+		&response.UpdatedAt,
+	); err != nil {
+		return nil, fmt.Errorf("conn.QueryRow: row.Scan: %w", err)
+	}
+	response.DueDate = dueDateNull.Time
 
 	return &response, nil
 }
