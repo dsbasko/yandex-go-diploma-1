@@ -9,8 +9,8 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func (h *Handler) UpdateTask(w http.ResponseWriter, r *http.Request) {
-	var dto api.UpdateTaskRequestV1
+func (h *Handler) UpdateIsArchive(w http.ResponseWriter, r *http.Request) {
+	var dto api.ArchiveTaskRequestV1
 	defer r.Body.Close()
 
 	id := chi.URLParam(r, "id")
@@ -20,7 +20,7 @@ func (h *Handler) UpdateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.Header.Get("Content-Type") != "application/json" {
+	if r.Header.Get("Content-Type") != ContentTypeApplicationJSON {
 		h.log.Error(ErrWrongContentType)
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -39,11 +39,10 @@ func (h *Handler) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	authPayload := coreMiddleware.GetAuthPayload(r.Context())
-	dto.UserID = authPayload.UserID
 
-	response, err := h.taskService.UpdateOnce(r.Context(), authPayload.UserID, id, &dto)
+	response, err := h.taskService.UpdateIsArchive(r.Context(), authPayload.UserID, id, &dto)
 	if err != nil {
-		h.log.Errorf("taskService.UpdateOnce: %v", err)
+		h.log.Errorf("taskService.UpdateIsArchive: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -55,7 +54,7 @@ func (h *Handler) UpdateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", ContentTypeApplicationJSON)
 	w.WriteHeader(http.StatusOK)
 	if _, err = w.Write(responseBytes); err != nil {
 		h.log.Errorf("Write: %v", err)

@@ -125,6 +125,21 @@ func (mr *MockRepositoryMockRecorder) Ping(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ping", reflect.TypeOf((*MockRepository)(nil).Ping), arg0)
 }
 
+// UpdateIsArchive mocks base method.
+func (m *MockRepository) UpdateIsArchive(arg0 context.Context, arg1, arg2 string, arg3 bool) (*entities.RepositoryTaskEntity, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateIsArchive", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*entities.RepositoryTaskEntity)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateIsArchive indicates an expected call of UpdateIsArchive.
+func (mr *MockRepositoryMockRecorder) UpdateIsArchive(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateIsArchive", reflect.TypeOf((*MockRepository)(nil).UpdateIsArchive), arg0, arg1, arg2, arg3)
+}
+
 // UpdateOnce mocks base method.
 func (m *MockRepository) UpdateOnce(arg0 context.Context, arg1, arg2 string, arg3 *api.UpdateTaskRequestV1) (*entities.RepositoryTaskEntity, error) {
 	m.ctrl.T.Helper()

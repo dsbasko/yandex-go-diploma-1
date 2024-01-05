@@ -24,7 +24,7 @@ func (s *Service) Create(ctx context.Context, dto *api.CreateTaskRequestV1) (*ap
 
 	response, err := s.repo.Create(ctx, dto)
 	if err != nil {
-		return nil, fmt.Errorf("repo.Create: %w", err)
+		return nil, fmt.Errorf("repo.CreateOnce: %w", err)
 	}
 
 	return &api.CreateTaskResponseV1{

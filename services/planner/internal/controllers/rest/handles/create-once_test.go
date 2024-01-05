@@ -19,7 +19,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestHandler_CreateTask(t *testing.T) {
+func TestHandler_CreateOnce(t *testing.T) {
 	log := logger.NewMock()
 	repo := repositories.NewMock(t)
 	taskService := task.NewService(log, repo)
@@ -28,7 +28,7 @@ func TestHandler_CreateTask(t *testing.T) {
 	h := New(log, repo, taskService)
 	router.
 		With(coreMiddleware.CheckAuthMock("42")).
-		Post("/", h.CreateTask)
+		Post("/", h.CreateOnce)
 
 	ts := httptest.NewServer(router)
 	defer ts.Close()
@@ -58,7 +58,7 @@ func TestHandler_CreateTask(t *testing.T) {
 		{
 			name:           "Wrong Content-Type",
 			token:          "42",
-			contentType:    "application/json",
+			contentType:    ContentTypeApplicationJSON,
 			wantStatusCode: http.StatusBadRequest,
 			repoCfg:        func() {},
 			wantBody:       func() string { return "" },
@@ -66,7 +66,7 @@ func TestHandler_CreateTask(t *testing.T) {
 		{
 			name:           "Empty Body",
 			token:          "42",
-			contentType:    "application/json",
+			contentType:    ContentTypeApplicationJSON,
 			wantStatusCode: http.StatusBadRequest,
 			repoCfg:        func() {},
 			wantBody:       func() string { return "" },
@@ -74,7 +74,7 @@ func TestHandler_CreateTask(t *testing.T) {
 		{
 			name:        "Success",
 			token:       "42",
-			contentType: "application/json",
+			contentType: ContentTypeApplicationJSON,
 			body: api.CreateTaskRequestV1{
 				Name:        "test task",
 				Description: "test description",

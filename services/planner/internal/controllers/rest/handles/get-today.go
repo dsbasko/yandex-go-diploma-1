@@ -33,7 +33,7 @@ func (h *Handler) GetToday(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", ContentTypeApplicationJSON)
 	w.WriteHeader(http.StatusOK)
 	if _, err = w.Write(responseBytes); err != nil {
 		h.log.Errorf("Write: %v", err)

@@ -8,11 +8,11 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/pkg/api"
 )
 
-func (h *Handler) CreateTask(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateOnce(w http.ResponseWriter, r *http.Request) {
 	var dto api.CreateTaskRequestV1
 	defer r.Body.Close()
 
-	if r.Header.Get("Content-Type") != "application/json" {
+	if r.Header.Get("Content-Type") != ContentTypeApplicationJSON {
 		h.log.Error(ErrWrongContentType)
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -35,7 +35,7 @@ func (h *Handler) CreateTask(w http.ResponseWriter, r *http.Request) {
 
 	response, err := h.taskService.Create(r.Context(), &dto)
 	if err != nil {
-		h.log.Errorf("taskService.Create: %v", err)
+		h.log.Errorf("taskService.CreateOnce: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -47,7 +47,7 @@ func (h *Handler) CreateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", ContentTypeApplicationJSON)
 	w.WriteHeader(http.StatusCreated)
 	if _, err = w.Write(responseBytes); err != nil {
 		h.log.Errorf("Write: %v", err)

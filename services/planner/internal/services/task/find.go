@@ -61,7 +61,7 @@ func (s *Service) FindToday(ctx context.Context, userID string) (*api.GetTasksRe
 
 	repoResponse, err := s.repo.FindByUserIDAndDate(ctx, userID, &dateStart, &dateEnd)
 	if err != nil {
-		return nil, fmt.Errorf("repo.Create: %w", err)
+		return nil, fmt.Errorf("repo.CreateOnce: %w", err)
 	}
 
 	if repoResponse == nil {
@@ -109,7 +109,7 @@ func (s *Service) FindWeek(ctx context.Context, userID string) (*api.GetTasksRes
 
 	repoResponse, err := s.repo.FindByUserIDAndDate(ctx, userID, &startOfWeek, &endOfWeek)
 	if err != nil {
-		return nil, fmt.Errorf("repo.Create: %w", err)
+		return nil, fmt.Errorf("repo.CreateOnce: %w", err)
 	}
 
 	if repoResponse == nil {
@@ -152,7 +152,7 @@ func (s *Service) FindUndated(ctx context.Context, userID string) (*api.GetTasks
 
 	repoResponse, err := s.repo.FindByUserIDAndDate(ctx, userID, nil, nil)
 	if err != nil {
-		return nil, fmt.Errorf("repo.Create: %w", err)
+		return nil, fmt.Errorf("repo.CreateOnce: %w", err)
 	}
 
 	if repoResponse == nil {
@@ -196,7 +196,7 @@ func (s *Service) FindOverdue(ctx context.Context, userID string) (*api.GetTasks
 	now := time.Now()
 	repoResponse, err := s.repo.FindByUserIDAndDate(ctx, userID, nil, &now)
 	if err != nil {
-		return nil, fmt.Errorf("repo.Create: %w", err)
+		return nil, fmt.Errorf("repo.CreateOnce: %w", err)
 	}
 
 	if repoResponse == nil {
@@ -239,7 +239,7 @@ func (s *Service) FindArchive(ctx context.Context, userID string) (*api.GetTasks
 
 	repoResponse, err := s.repo.FindArchive(ctx, userID)
 	if err != nil {
-		return nil, fmt.Errorf("repo.Create: %w", err)
+		return nil, fmt.Errorf("repo.CreateOnce: %w", err)
 	}
 
 	if repoResponse == nil {

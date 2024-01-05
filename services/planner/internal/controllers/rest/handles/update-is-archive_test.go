@@ -2,6 +2,7 @@ package handles
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -19,7 +20,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestHandler_UpdateTask(t *testing.T) {
+func TestHandler_UpdateIsArchive(t *testing.T) {
 	log := logger.NewMock()
 	repo := repositories.NewMock(t)
 	taskService := task.NewService(log, repo)
@@ -28,7 +29,7 @@ func TestHandler_UpdateTask(t *testing.T) {
 	h := New(log, repo, taskService)
 	router.
 		With(coreMiddleware.CheckAuthMock("42")).
-		Patch("/{id}", h.UpdateTask)
+		Patch("/{id}/done", h.UpdateOnce)
 
 	ts := httptest.NewServer(router)
 	defer ts.Close()
@@ -38,7 +39,7 @@ func TestHandler_UpdateTask(t *testing.T) {
 		token          string
 		contentType    string
 		id             string
-		body           *api.UpdateTaskRequestV1
+		body           *api.ArchiveTaskRequestV1
 		wantStatusCode int
 		wantBody       func() string
 		repoCfg        func()
@@ -59,13 +60,6 @@ func TestHandler_UpdateTask(t *testing.T) {
 			wantBody:       func() string { return "" },
 		},
 		{
-			name:           "Empty ID",
-			token:          "42",
-			wantStatusCode: http.StatusNotFound,
-			repoCfg:        func() {},
-			wantBody:       func() string { return "404 page not found\n" },
-		},
-		{
 			name:           "Wrong Content-Type",
 			token:          "42",
 			id:             "42",
@@ -77,20 +71,19 @@ func TestHandler_UpdateTask(t *testing.T) {
 			name:           "Empty Body",
 			token:          "42",
 			id:             "42",
-			contentType:    "application/json",
+			contentType:    ContentTypeApplicationJSON,
 			wantStatusCode: http.StatusBadRequest,
 			body:           nil,
 			repoCfg:        func() {},
 			wantBody:       func() string { return "" },
 		},
 		{
-			name:        "Success",
+			name:        "Success To UpdateIsArchive",
 			token:       "42",
 			id:          "42",
-			contentType: "application/json",
-			body: &api.UpdateTaskRequestV1{
-				Name:        "test name",
-				Description: "test description",
+			contentType: ContentTypeApplicationJSON,
+			body: &api.ArchiveTaskRequestV1{
+				IsArchive: true,
 			},
 			wantStatusCode: http.StatusOK,
 			wantBody: func() string {
@@ -98,6 +91,7 @@ func TestHandler_UpdateTask(t *testing.T) {
 					ID:          "42",
 					Name:        "test name",
 					Description: "test description",
+					IsArchive:   true,
 				})
 				return string(response)
 			},
@@ -108,6 +102,36 @@ func TestHandler_UpdateTask(t *testing.T) {
 						ID:          "42",
 						Name:        "test name",
 						Description: "test description",
+						IsArchive:   true,
+					}, nil)
+			},
+		},
+		{
+			name:        "Success From UpdateIsArchive",
+			token:       "42",
+			id:          "42",
+			contentType: ContentTypeApplicationJSON,
+			body: &api.ArchiveTaskRequestV1{
+				IsArchive: false,
+			},
+			wantStatusCode: http.StatusOK,
+			wantBody: func() string {
+				response, _ := json.Marshal(api.UpdateTaskResponseV1{
+					ID:          "42",
+					Name:        "test name",
+					Description: "test description",
+					IsArchive:   false,
+				})
+				return string(response)
+			},
+			repoCfg: func() {
+				repo.EXPECT().
+					UpdateOnce(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+					Return(&entities.RepositoryTaskEntity{
+						ID:          "42",
+						Name:        "test name",
+						Description: "test description",
+						IsArchive:   false,
 					}, nil)
 			},
 		},
@@ -125,7 +149,7 @@ func TestHandler_UpdateTask(t *testing.T) {
 
 			resp, body := test.Request(t, ts, &test.RequestArgs{
 				Method:      "PATCH",
-				Path:        "/" + tt.id,
+				Path:        fmt.Sprintf("/%s/done", tt.id),
 				JWTToken:    tt.token,
 				ContentType: tt.contentType,
 				Body:        bodyBytes,
