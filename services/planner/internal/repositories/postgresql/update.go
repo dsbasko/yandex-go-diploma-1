@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	"github.com/dsbasko/yandex-go-diploma-1/core/structs"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/entities"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/pkg/api"
 )
@@ -17,7 +17,7 @@ func (r *Repository) UpdateOnce(
 	userID, id string,
 	dto *api.UpdateTaskRequestV1,
 ) (*entities.RepositoryTaskEntity, error) {
-	dtoKeysAndValues := lib.StructToKeysAndValues(dto, true, true)
+	dtoKeysAndValues := structs.ToKeysAndValues(dto, true, &[]string{"id", "is_archive", "due_date"})
 	setMap := map[string]any{}
 	for i, key := range dtoKeysAndValues.Keys {
 		setMap[key] = dtoKeysAndValues.Values[i]
@@ -28,9 +28,9 @@ func (r *Repository) UpdateOnce(
 		SetMap(setMap).
 		Where("user_id = ? AND id = ?", userID, id).
 		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(
-			lib.StructToKeysAndValues(
+			structs.ToKeysAndValues(
 				&entities.RepositoryTaskEntity{},
-				false, false,
+				false, nil,
 			).Keys,
 			",",
 		))).
@@ -69,9 +69,9 @@ func (r *Repository) UpdateIsArchive(
 		Set("is_archive", isArchive).
 		Where("user_id = ? AND id = ?", userID, id).
 		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(
-			lib.StructToKeysAndValues(
+			structs.ToKeysAndValues(
 				&entities.RepositoryTaskEntity{},
-				false, false,
+				false, nil,
 			).Keys,
 			",",
 		))).
@@ -119,9 +119,9 @@ func (r *Repository) UpdateDueDate(
 		Set("due_date", dueDateVal).
 		Where("user_id = ? AND id = ?", userID, id).
 		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(
-			lib.StructToKeysAndValues(
+			structs.ToKeysAndValues(
 				&entities.RepositoryTaskEntity{},
-				false, false,
+				false, nil,
 			).Keys,
 			",",
 		))).

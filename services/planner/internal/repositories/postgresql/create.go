@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	"github.com/dsbasko/yandex-go-diploma-1/core/structs"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/entities"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/pkg/api"
 )
@@ -15,16 +15,16 @@ func (r *Repository) Create(
 	ctx context.Context,
 	dto *api.CreateTaskRequestV1,
 ) (*entities.RepositoryTaskEntity, error) {
-	dtoKeysAndValues := lib.StructToKeysAndValues(dto, true, true)
+	dtoKeysAndValues := structs.ToKeysAndValues(dto, true, &[]string{"id"})
 
 	query, args, err := r.builder.
 		Insert("task").
 		Columns(dtoKeysAndValues.Keys...).
 		Values(dtoKeysAndValues.Values...).
 		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(
-			lib.StructToKeysAndValues(
+			structs.ToKeysAndValues(
 				&entities.RepositoryTaskEntity{},
-				false, false,
+				false, nil,
 			).Keys,
 			",",
 		))).

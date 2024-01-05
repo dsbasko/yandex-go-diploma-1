@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	"github.com/dsbasko/yandex-go-diploma-1/core/errors"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 )
 
@@ -22,7 +22,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		h.log.Errorf("accountService.Login: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
-		if _, err = w.Write([]byte(lib.ErrorsUnwrap(err).Error())); err != nil {
+		if _, err = w.Write([]byte(errors.Unwrap(err).Error())); err != nil {
 			h.log.Errorf("Write: %v", err)
 			w.WriteHeader(http.StatusBadRequest)
 		}

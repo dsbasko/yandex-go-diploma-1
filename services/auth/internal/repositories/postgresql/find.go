@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	"github.com/dsbasko/yandex-go-diploma-1/core/structs"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
 )
 
@@ -13,8 +13,8 @@ func (r *Repository) FindByID(
 	id string,
 ) (*domain.RepositoryAccountEntity, error) {
 	query, args, err := r.builder.
-		Select(lib.StructToKeysAndValues(
-			&domain.RepositoryAccountEntity{}, false, false,
+		Select(structs.ToKeysAndValues(
+			&domain.RepositoryAccountEntity{}, false, nil,
 		).Keys...).
 		From("accounts").
 		Where("id = ?", id).
@@ -46,8 +46,8 @@ func (r *Repository) FindByUsername(
 	username string,
 ) (*domain.RepositoryAccountEntity, error) {
 	query, args, err := r.builder.
-		Select(lib.StructToKeysAndValues(
-			&domain.RepositoryAccountEntity{}, false, false,
+		Select(structs.ToKeysAndValues(
+			&domain.RepositoryAccountEntity{}, false, nil,
 		).Keys...).
 		From("accounts").
 		Where("username = ?", username).

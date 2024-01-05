@@ -1,15 +1,13 @@
-package lib
+package errors
 
 import "errors"
 
-func ErrorsUnwrap(err error) error {
+func Unwrap(err error) error {
 	for {
 		unwrapped := errors.Unwrap(err)
-
 		if unwrapped == nil {
 			return err
 		}
-
 		err = unwrapped
 	}
 }

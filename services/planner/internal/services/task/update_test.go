@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	"github.com/dsbasko/yandex-go-diploma-1/core/errors"
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/entities"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/repositories"
@@ -130,7 +130,7 @@ func TestService_UpdateOnce(t *testing.T) {
 			response, err := service.UpdateOnce(tt.ctx, tt.userID, tt.id, tt.dto)
 
 			assert.Equal(t, response, tt.wantRes)
-			assert.Equal(t, lib.ErrorsUnwrap(err), tt.wantErr)
+			assert.Equal(t, errors.Unwrap(err), tt.wantErr)
 		})
 	}
 }
@@ -231,7 +231,7 @@ func TestService_UpdateIsArchive(t *testing.T) {
 			response, err := service.UpdateIsArchive(tt.ctx, tt.userID, tt.id, tt.dto)
 
 			assert.Equal(t, response, tt.wantRes)
-			assert.Equal(t, lib.ErrorsUnwrap(err), tt.wantErr)
+			assert.Equal(t, errors.Unwrap(err), tt.wantErr)
 		})
 	}
 }
@@ -332,7 +332,7 @@ func TestService_UpdateDueDate(t *testing.T) {
 			response, err := service.UpdateDueDate(tt.ctx, tt.userID, tt.id, tt.dto)
 
 			assert.Equal(t, response, tt.wantRes)
-			assert.Equal(t, lib.ErrorsUnwrap(err), tt.wantErr)
+			assert.Equal(t, errors.Unwrap(err), tt.wantErr)
 		})
 	}
 }

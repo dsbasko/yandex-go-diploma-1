@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	coreErrors "github.com/dsbasko/yandex-go-diploma-1/core/errors"
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/repositories"
@@ -98,7 +98,7 @@ func TestService_ChangePassword(t *testing.T) {
 			tt.mockConfig()
 			response, err := service.ChangePassword(ctx, "42", tt.dto)
 			if err != nil || tt.wantErr != nil {
-				assert.Equal(t, lib.ErrorsUnwrap(err), tt.wantErr)
+				assert.Equal(t, coreErrors.Unwrap(err), tt.wantErr)
 			} else {
 				assert.Equal(t, response, tt.wantRes)
 			}

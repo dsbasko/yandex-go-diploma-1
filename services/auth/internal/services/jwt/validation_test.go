@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	coreErrors "github.com/dsbasko/yandex-go-diploma-1/core/errors"
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/config"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
@@ -94,7 +94,7 @@ func TestService_Validation(t *testing.T) {
 			response, err := service.Validation(ctx, tt.dto)
 
 			if err != nil || tt.wantErr != nil {
-				assert.Equal(t, lib.ErrorsUnwrap(err), tt.wantErr)
+				assert.Equal(t, coreErrors.Unwrap(err), tt.wantErr)
 			} else {
 				assert.Equal(t, response.IsValid, tt.wantRes.IsValid)
 				assert.Equal(t, response.Payload, tt.wantRes.Payload)

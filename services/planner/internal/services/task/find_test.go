@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	"github.com/dsbasko/yandex-go-diploma-1/core/errors"
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/entities"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/repositories"
@@ -89,7 +89,7 @@ func TestService_FindById(t *testing.T) {
 			response, err := service.FindByID(tt.ctx, tt.userID, tt.id)
 
 			assert.Equal(t, response, tt.wantRes)
-			assert.Equal(t, lib.ErrorsUnwrap(err), tt.wantErr)
+			assert.Equal(t, errors.Unwrap(err), tt.wantErr)
 		})
 	}
 }
@@ -215,7 +215,7 @@ func TestService_FindToday(t *testing.T) {
 			if tt.wantRes != nil && response != nil && response.Total != 0 && tt.wantRes.Total != 0 {
 				assert.Equal(t, response, tt.wantRes)
 			}
-			assert.Equal(t, err, tt.wantErr)
+			assert.Equal(t, errors.Unwrap(err), tt.wantErr)
 		})
 	}
 }
@@ -341,7 +341,7 @@ func TestService_FindWeek(t *testing.T) {
 			if tt.wantRes != nil && response != nil && response.Total != 0 && tt.wantRes.Total != 0 {
 				assert.Equal(t, response, tt.wantRes)
 			}
-			assert.Equal(t, err, tt.wantErr)
+			assert.Equal(t, errors.Unwrap(err), tt.wantErr)
 		})
 	}
 }
@@ -467,7 +467,7 @@ func TestService_FindUndated(t *testing.T) {
 			if tt.wantRes != nil && response != nil && response.Total != 0 && tt.wantRes.Total != 0 {
 				assert.Equal(t, response, tt.wantRes)
 			}
-			assert.Equal(t, err, tt.wantErr)
+			assert.Equal(t, errors.Unwrap(err), tt.wantErr)
 		})
 	}
 }
@@ -593,7 +593,7 @@ func TestService_FindOverdue(t *testing.T) {
 			if tt.wantRes != nil && response != nil && response.Total != 0 && tt.wantRes.Total != 0 {
 				assert.Equal(t, response, tt.wantRes)
 			}
-			assert.Equal(t, err, tt.wantErr)
+			assert.Equal(t, errors.Unwrap(err), tt.wantErr)
 		})
 	}
 }
@@ -676,7 +676,7 @@ func TestService_FindArchive(t *testing.T) {
 			if tt.wantRes != nil && response != nil && response.Total != 0 && tt.wantRes.Total != 0 {
 				assert.Equal(t, response, tt.wantRes)
 			}
-			assert.Equal(t, err, tt.wantErr)
+			assert.Equal(t, errors.Unwrap(err), tt.wantErr)
 		})
 	}
 }

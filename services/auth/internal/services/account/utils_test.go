@@ -3,7 +3,7 @@ package account
 import (
 	"testing"
 
-	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	"github.com/dsbasko/yandex-go-diploma-1/core/errors"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -48,7 +48,7 @@ func Test_passwordCompare(t *testing.T) {
 			err := passwordCompare(hashedPassword, tt.password)
 
 			if err != nil || tt.wantErr != nil {
-				assert.Equal(t, lib.ErrorsUnwrap(err), tt.wantErr)
+				assert.Equal(t, errors.Unwrap(err), tt.wantErr)
 			}
 		})
 	}

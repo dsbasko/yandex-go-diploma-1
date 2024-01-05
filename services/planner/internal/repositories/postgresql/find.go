@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	"github.com/dsbasko/yandex-go-diploma-1/core/structs"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/entities"
 	"github.com/jackc/pgx/v5"
 )
@@ -16,8 +16,8 @@ func (r *Repository) FindByID(
 	userID, id string,
 ) (*entities.RepositoryTaskEntity, error) {
 	query, args, err := r.builder.
-		Select(lib.StructToKeysAndValues(
-			&entities.RepositoryTaskEntity{}, false, false,
+		Select(structs.ToKeysAndValues(
+			&entities.RepositoryTaskEntity{}, false, nil,
 		).Keys...).
 		From("task").
 		Where("user_id = ? AND id = ?", userID, id).
@@ -73,8 +73,8 @@ func (r *Repository) FindByUserIDAndDate(
 	}
 
 	query, args, err := r.builder.
-		Select(lib.StructToKeysAndValues(
-			&entities.RepositoryTaskEntity{}, false, false,
+		Select(structs.ToKeysAndValues(
+			&entities.RepositoryTaskEntity{}, false, nil,
 		).Keys...).
 		From("task").
 		Where(whereQuery, whereArgs...).
@@ -117,8 +117,8 @@ func (r *Repository) FindArchive(
 	userID string,
 ) (*[]entities.RepositoryTaskEntity, error) {
 	query, args, err := r.builder.
-		Select(lib.StructToKeysAndValues(
-			&entities.RepositoryTaskEntity{}, false, false,
+		Select(structs.ToKeysAndValues(
+			&entities.RepositoryTaskEntity{}, false, nil,
 		).Keys...).
 		From("task").
 		Where("user_id = ? AND is_archive = TRUE", userID).

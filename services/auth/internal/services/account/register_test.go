@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	"github.com/dsbasko/yandex-go-diploma-1/core/errors"
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/repositories"
@@ -93,7 +93,7 @@ func TestService_Register(t *testing.T) {
 			tt.mockConfig()
 			response, err := service.Register(ctx, tt.dto)
 			if err != nil || tt.wantErr != nil {
-				assert.Equal(t, lib.ErrorsUnwrap(err), tt.wantErr)
+				assert.Equal(t, errors.Unwrap(err), tt.wantErr)
 			} else {
 				assert.Equal(t, response, tt.wantRes)
 			}

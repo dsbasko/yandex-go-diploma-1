@@ -1,16 +1,17 @@
-package lib
+package structs
 
 import (
 	"reflect"
+	"slices"
 )
 
-type response struct {
+type KeysAndValues struct {
 	Keys   []string
 	Values []any
 }
 
-func StructToKeysAndValues(data any, ignoreEmpty, ignoreID bool) *response {
-	var res response
+func ToKeysAndValues(data any, ignoreEmpty bool, ignoreFields *[]string) *KeysAndValues {
+	var res KeysAndValues
 
 	v := reflect.ValueOf(data).Elem()
 	t := v.Type()
@@ -20,11 +21,14 @@ func StructToKeysAndValues(data any, ignoreEmpty, ignoreID bool) *response {
 		tag := field.Tag.Get("json")
 		value := v.Field(i).Interface()
 
-		if tag == "id" && ignoreID {
+		if ignoreFields != nil && slices.Contains(*ignoreFields, tag) {
 			continue
 		}
 
-		if ignoreEmpty && reflect.DeepEqual(value, reflect.Zero(v.Field(i).Type()).Interface()) {
+		if ignoreEmpty && reflect.DeepEqual(
+			value,
+			reflect.Zero(v.Field(i).Type()).Interface(),
+		) {
 			continue
 		}
 

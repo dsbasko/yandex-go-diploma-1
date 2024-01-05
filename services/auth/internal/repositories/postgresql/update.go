@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	"github.com/dsbasko/yandex-go-diploma-1/core/structs"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
 )
 
@@ -13,7 +13,7 @@ func (r *Repository) UpdateOnce(
 	ctx context.Context,
 	dto *domain.RepositoryAccountEntity,
 ) (*domain.RepositoryAccountEntity, error) {
-	dtoKeysAndValues := lib.StructToKeysAndValues(dto, true, true)
+	dtoKeysAndValues := structs.ToKeysAndValues(dto, true, &[]string{"id"})
 	setMap := map[string]any{}
 	for i, key := range dtoKeysAndValues.Keys {
 		setMap[key] = dtoKeysAndValues.Values[i]
@@ -24,9 +24,9 @@ func (r *Repository) UpdateOnce(
 		SetMap(setMap).
 		Where("id = ?", dto.ID).
 		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(
-			lib.StructToKeysAndValues(
+			structs.ToKeysAndValues(
 				&domain.RepositoryAccountEntity{},
-				false, false,
+				false, nil,
 			).Keys,
 			",",
 		))).

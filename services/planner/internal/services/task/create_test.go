@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	"github.com/dsbasko/yandex-go-diploma-1/core/errors"
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/entities"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/repositories"
@@ -94,7 +94,7 @@ func TestService_Create(t *testing.T) {
 			response, err := service.Create(tt.ctx, tt.dto)
 
 			assert.Equal(t, response, tt.wantRes)
-			assert.Equal(t, lib.ErrorsUnwrap(err), tt.wantErr)
+			assert.Equal(t, errors.Unwrap(err), tt.wantErr)
 		})
 	}
 }

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	"github.com/dsbasko/yandex-go-diploma-1/core/errors"
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	"github.com/dsbasko/yandex-go-diploma-1/services/planner/internal/repositories"
 	"github.com/golang/mock/gomock"
@@ -61,7 +61,7 @@ func TestService_DeleteByID(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.repoConf()
 			err := service.DeleteByID(tt.ctx, tt.userID, tt.id)
-			assert.Equal(t, lib.ErrorsUnwrap(err), tt.wantErr)
+			assert.Equal(t, errors.Unwrap(err), tt.wantErr)
 		})
 	}
 }

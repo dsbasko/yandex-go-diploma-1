@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dsbasko/yandex-go-diploma-1/core/lib"
+	"github.com/dsbasko/yandex-go-diploma-1/core/structs"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/domain"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 )
@@ -14,16 +14,16 @@ func (r *Repository) CreateOnce(
 	ctx context.Context,
 	dto *api.RegisterRequestV1,
 ) (*domain.RepositoryAccountEntity, error) {
-	dtoKeysAndValues := lib.StructToKeysAndValues(dto, true, true)
+	dtoKeysAndValues := structs.ToKeysAndValues(dto, true, &[]string{"id"})
 
 	query, args, err := r.builder.
 		Insert("accounts").
 		Columns(dtoKeysAndValues.Keys...).
 		Values(dtoKeysAndValues.Values...).
 		Suffix(fmt.Sprintf("RETURNING %s", strings.Join(
-			lib.StructToKeysAndValues(
+			structs.ToKeysAndValues(
 				&domain.RepositoryAccountEntity{},
-				false, false,
+				false, nil,
 			).Keys,
 			",",
 		))).
