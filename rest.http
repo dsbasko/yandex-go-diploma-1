@@ -1,0 +1,108 @@
+### [auth]/ping Проверка доступности сервиса
+GET http://localhost/auth/ping
+
+### [auth]/register Регистрация
+POST http://localhost/auth/register
+Content-Type: application/json
+
+{
+  "username": "login",
+  "password": "password",
+  "first_name": "first name",
+  "last_name": "last name"
+}
+
+### [auth]/login Авторизация
+POST http://localhost/auth/login
+Content-Type: application/json
+
+{
+  "username": "login",
+  "password": "password"
+}
+
+### [auth]/login Смена пароля
+POST http://localhost/auth/login
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDM2ODIzOTcsImlhdCI6MTcwMzY4MTc5NywiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiZjc1NjQxM2QtMzI5ZS00NGUyLWEzOTYtNzQ2NWZhYTRhNzdhIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.-Pz_gG6ikYT6jHA1OFZr-ZR0Q_c3bF4B9hdInj00HFo
+
+{
+  "old_password": "password",
+  "new_password": "new_password"
+}
+
+
+
+
+
+
+
+### [planner]/ping Проверка доступности сервиса
+GET http://localhost/planner/ping
+
+### [planner]/ Добавление задачи
+POST http://localhost/planner/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1MDYsImlhdCI6MTcwNDM1MjkwNiwiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiM2M4NWRkYjUtYWJkZS00MzUyLTliYzYtMmQzYTRmMzYzOGUzIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.qnuR_kgHPpEWc_tPSKPEluTjN6zTCsU2NgWxLWFT1Ng
+
+{
+  "name": "Task 1",
+  "description": "Description task 1",
+  "due_date": "2024-01-01T12:30:00Z",
+}
+
+### [planner]/{id} Получение задачи по ID
+GET http://localhost/planner/1cc24a34-1a24-44c5-95f3-68bc0f387211
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1MDYsImlhdCI6MTcwNDM1MjkwNiwiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiM2M4NWRkYjUtYWJkZS00MzUyLTliYzYtMmQzYTRmMzYzOGUzIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.qnuR_kgHPpEWc_tPSKPEluTjN6zTCsU2NgWxLWFT1Ng
+
+### [planner]/ Изменение задачи
+PATCH http://localhost/planner/1cc24a34-1a24-44c5-95f3-68bc0f387211
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1MDYsImlhdCI6MTcwNDM1MjkwNiwiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiM2M4NWRkYjUtYWJkZS00MzUyLTliYzYtMmQzYTRmMzYzOGUzIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.qnuR_kgHPpEWc_tPSKPEluTjN6zTCsU2NgWxLWFT1Ng
+
+{
+  "name": "Task 2",
+  "description": "Description task 2"
+}
+
+### [planner]/ Помечание задачи как выполненной
+PATCH http://localhost/planner/1cc24a34-1a24-44c5-95f3-68bc0f387211/done
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1MDYsImlhdCI6MTcwNDM1MjkwNiwiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiM2M4NWRkYjUtYWJkZS00MzUyLTliYzYtMmQzYTRmMzYzOGUzIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.qnuR_kgHPpEWc_tPSKPEluTjN6zTCsU2NgWxLWFT1Ng
+
+{
+  "is_archive": true
+}
+
+### [planner]/ Изменение времени выполненеия задачи
+PATCH http://localhost/planner/1cc24a34-1a24-44c5-95f3-68bc0f387211/due_date
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1MDYsImlhdCI6MTcwNDM1MjkwNiwiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiM2M4NWRkYjUtYWJkZS00MzUyLTliYzYtMmQzYTRmMzYzOGUzIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.qnuR_kgHPpEWc_tPSKPEluTjN6zTCsU2NgWxLWFT1Ng
+
+{
+  "due_date": "2024-01-01T00:00:00Z"
+}
+
+### [planner]/{id} Удаление задачи
+DELETE http://localhost/planner/archive
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1MDYsImlhdCI6MTcwNDM1MjkwNiwiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiM2M4NWRkYjUtYWJkZS00MzUyLTliYzYtMmQzYTRmMzYzOGUzIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.qnuR_kgHPpEWc_tPSKPEluTjN6zTCsU2NgWxLWFT1Ng
+
+### [planner]/today Получение задач на сегодня
+GET http://localhost/planner/today
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1MDYsImlhdCI6MTcwNDM1MjkwNiwiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiM2M4NWRkYjUtYWJkZS00MzUyLTliYzYtMmQzYTRmMzYzOGUzIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.qnuR_kgHPpEWc_tPSKPEluTjN6zTCsU2NgWxLWFT1Ng
+
+### [planner]/wook Получение задач на неделю
+GET http://localhost/planner/week
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1MDYsImlhdCI6MTcwNDM1MjkwNiwiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiM2M4NWRkYjUtYWJkZS00MzUyLTliYzYtMmQzYTRmMzYzOGUzIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.qnuR_kgHPpEWc_tPSKPEluTjN6zTCsU2NgWxLWFT1Ng
+
+### [planner]/undated Получение задач без даты выполненеия
+GET http://localhost/planner/undated
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1MDYsImlhdCI6MTcwNDM1MjkwNiwiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiM2M4NWRkYjUtYWJkZS00MzUyLTliYzYtMmQzYTRmMzYzOGUzIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.qnuR_kgHPpEWc_tPSKPEluTjN6zTCsU2NgWxLWFT1Ng
+
+### [planner]/overdue Получение просроченных задач
+GET http://localhost/planner/overdue
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1MDYsImlhdCI6MTcwNDM1MjkwNiwiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiM2M4NWRkYjUtYWJkZS00MzUyLTliYzYtMmQzYTRmMzYzOGUzIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.qnuR_kgHPpEWc_tPSKPEluTjN6zTCsU2NgWxLWFT1Ng
+
+### [planner]/archive Получение задач из архиве
+GET http://localhost/planner/archive
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1MDYsImlhdCI6MTcwNDM1MjkwNiwiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiM2M4NWRkYjUtYWJkZS00MzUyLTliYzYtMmQzYTRmMzYzOGUzIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.qnuR_kgHPpEWc_tPSKPEluTjN6zTCsU2NgWxLWFT1Ng

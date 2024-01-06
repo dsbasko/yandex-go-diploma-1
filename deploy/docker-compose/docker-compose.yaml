@@ -1,0 +1,151 @@
+version: '3'
+
+services:
+  # Nginx
+  nginx:
+    container_name: ${NGINX_CONTAINER_NAME}
+    extends:
+      file: ../../nginx/docker-compose/${ENV}.docker-compose.yaml
+      service: nginx
+    networks:
+      - yandex-diploma-1
+    ports:
+      - '${NGINX_PORT_HTTP}:80'
+    env_file:
+      - ../../env/.env
+
+  # RabbitMQ
+  rmq:
+    container_name: ${RMQ_CONTAINER_NAME}
+    extends:
+      file: ../../brokers/rabbitmq/docker-compose/${ENV}.docker-compose.yaml
+      service: rmq
+    networks:
+      - yandex-diploma-1
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RMQ_AUTH_USER}
+      RABBITMQ_DEFAULT_PASS: ${RMQ_AUTH_PASS}
+
+  # Auth Service
+  auth:
+    container_name: ${AUTH_CONTAINER_NAME}
+    extends:
+      file: ../../services/auth/deploy/docker-compose/${ENV}.docker-compose.yaml
+      service: auth
+    networks:
+      - yandex-diploma-1
+    environment:
+      ENV: ${ENV}
+      SERVICE_NAME: ${AUTH_CONTAINER_NAME}
+      JWT_SECRET_KEY: ${AUTH_JWT_SECRET_KEY}
+      JWT_EXP_MINUTES: ${AUTH_JWT_EXP_MINUTES}
+      REST_READ_TIMEOUT: ${AUTH_REST_READ_TIMEOUT}
+      REST_WRITE_TIMEOUT: ${AUTH_REST_WRITE_TIMEOUT}
+      PSQL_HOST: ${AUTH_PSQL_HOST}
+      PSQL_PORT: ${AUTH_PSQL_PORT}
+      PSQL_USER: ${AUTH_PSQL_USER}
+      PSQL_PASS: ${AUTH_PSQL_PASS}
+      PSQL_DB: ${AUTH_PSQL_DB}
+      PSQL_MAX_POOLS: ${AUTH_PSQL_MAX_POOLS}
+      PSQL_MAX_RETRIES: ${AUTH_PSQL_MAX_RETRIES}
+      PSQL_RETRY_TIMEOUT: ${AUTH_PSQL_RETRY_TIMEOUT}
+      RMQ_HOST: ${RMQ_CONTAINER_NAME}
+      RMQ_PORT: ${RMQ_PORT}
+      RMQ_PORT_WEB: ${RMQ_PORT_WEB}
+      RMQ_AUTH_USER: ${RMQ_AUTH_USER}
+      RMQ_AUTH_PASS: ${RMQ_AUTH_PASS}
+      RMQ_MAX_RETRIES: ${AUTH_RMQ_MAX_RETRIES}
+      RMQ_RETRY_TIMEOUT: ${AUTH_RMQ_RETRY_TIMEOUT}
+    depends_on:
+      - auth_db
+      - rmq
+
+  auth_db:
+    container_name: ${AUTH_PSQL_CONTAINER_NAME}
+    extends:
+      file: ../../services/auth/deploy/docker-compose/${ENV}.docker-compose.yaml
+      service: auth_db
+    networks:
+      - yandex-diploma-1
+    environment:
+      POSTGRES_USER: ${AUTH_PSQL_USER}
+      POSTGRES_PASSWORD: ${AUTH_PSQL_PASS}
+      POSTGRES_DB: ${AUTH_PSQL_DB}
+      PGPORT: ${AUTH_PSQL_PORT}
+
+  auth_db_migrator:
+    container_name: ${AUTH_PSQL_MIGRATOR_CONTAINER_NAME}
+    extends:
+      file: ../../services/auth/deploy/docker-compose/${ENV}.docker-compose.yaml
+      service: auth_db_migrator
+    networks:
+      - yandex-diploma-1
+    environment:
+      PSQL_CONTAINER_NAME: ${AUTH_PSQL_CONTAINER_NAME}
+      PSQL_DB: ${AUTH_PSQL_DB}
+      PSQL_USER: ${AUTH_PSQL_USER}
+      PSQL_PASS: ${AUTH_PSQL_PASS}
+      PSQL_PORT: ${AUTH_PSQL_PORT}
+
+  # Planner Service
+  planner:
+    container_name: ${PLANNER_CONTAINER_NAME}
+    extends:
+      file: ../../services/planner/deploy/docker-compose/${ENV}.docker-compose.yaml
+      service: planner
+    networks:
+      - yandex-diploma-1
+    environment:
+      ENV: ${ENV}
+      SERVICE_NAME: ${PLANNER_CONTAINER_NAME}
+      REST_READ_TIMEOUT: ${PLANNER_REST_READ_TIMEOUT}
+      REST_WRITE_TIMEOUT: ${PLANNER_REST_WRITE_TIMEOUT}
+      PSQL_HOST: ${PLANNER_PSQL_HOST}
+      PSQL_PORT: ${PLANNER_PSQL_PORT}
+      PSQL_USER: ${PLANNER_PSQL_USER}
+      PSQL_PASS: ${PLANNER_PSQL_PASS}
+      PSQL_DB: ${PLANNER_PSQL_DB}
+      PSQL_MAX_POOLS: ${PLANNER_PSQL_MAX_POOLS}
+      PSQL_MAX_RETRIES: ${PLANNER_PSQL_MAX_RETRIES}
+      PSQL_RETRY_TIMEOUT: ${PLANNER_PSQL_RETRY_TIMEOUT}
+      RMQ_HOST: ${RMQ_CONTAINER_NAME}
+      RMQ_PORT: ${RMQ_PORT}
+      RMQ_PORT_WEB: ${RMQ_PORT_WEB}
+      RMQ_AUTH_USER: ${RMQ_AUTH_USER}
+      RMQ_AUTH_PASS: ${RMQ_AUTH_PASS}
+      RMQ_MAX_RETRIES: ${PLANNER_RMQ_MAX_RETRIES}
+      RMQ_RETRY_TIMEOUT: ${PLANNER_RMQ_RETRY_TIMEOUT}
+    depends_on:
+      - planner_db
+      - rmq
+
+  planner_db:
+    container_name: ${PLANNER_PSQL_CONTAINER_NAME}
+    extends:
+      file: ../../services/planner/deploy/docker-compose/${ENV}.docker-compose.yaml
+      service: planner_db
+    networks:
+      - yandex-diploma-1
+    environment:
+      POSTGRES_USER: ${PLANNER_PSQL_USER}
+      POSTGRES_PASSWORD: ${PLANNER_PSQL_PASS}
+      POSTGRES_DB: ${PLANNER_PSQL_DB}
+      PGPORT: ${PLANNER_PSQL_PORT}
+
+  planner_db_migrator:
+    container_name: ${PLANNER_PSQL_MIGRATOR_CONTAINER_NAME}
+    extends:
+      file: ../../services/planner/deploy/docker-compose/${ENV}.docker-compose.yaml
+      service: planner_db_migrator
+    networks:
+      - yandex-diploma-1
+    environment:
+      PSQL_CONTAINER_NAME: ${PLANNER_PSQL_CONTAINER_NAME}
+      PSQL_DB: ${PLANNER_PSQL_DB}
+      PSQL_USER: ${PLANNER_PSQL_USER}
+      PSQL_PASS: ${PLANNER_PSQL_PASS}
+      PSQL_PORT: ${PLANNER_PSQL_PORT}
+
+networks:
+  yandex-diploma-1:
+    driver: bridge

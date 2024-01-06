@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  planner:
+    restart: always
+    build:
+      context: ../../../../
+      dockerfile: ./services/planner/deploy/docker/prod.Dockerfile
+
+  planner_db:
+    build:
+      context: ../../
+      dockerfile: ./deploy/docker/psql.Dockerfile
+
+  planner_db_migrator:
+    restart: on-failure
+    build:
+      context: ../../
+      dockerfile: ./deploy/docker/migrator.Dockerfile

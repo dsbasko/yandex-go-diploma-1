@@ -4,5 +4,7 @@ Thumbs.db
 .idea
 .vscode
 
-.env.local
+.env
 presentation.md
+coverage.out
+bin
