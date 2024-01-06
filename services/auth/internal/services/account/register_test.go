@@ -33,7 +33,7 @@ func TestService_Register(t *testing.T) {
 				Username: "test_username",
 				Password: "test_password",
 			},
-			wantRes: &api.RegisterResponseV1{UUID: "42"},
+			wantRes: &api.RegisterResponseV1{ID: "42"},
 			wantErr: nil,
 			mockConfig: func() {
 				repo.EXPECT().CreateOnce(gomock.Any(), gomock.Any()).Return(&entities.RepositoryAccountEntity{ID: "42"}, nil)

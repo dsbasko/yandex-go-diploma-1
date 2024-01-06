@@ -16,5 +16,6 @@ type JWTValidationResponseV1 struct {
 	Payload *JWTPayloadV1 `json:"payload"`
 }
 
-var AMQPQueueJWTValidation = "auth.validation.queue"
-var AMQPKeyJWTValidation = "auth.validation.key"
+var AMQPJWTValidationQueue = "auth.validation.queue"
+var AMQPJWTValidationKey = "auth.validation.key"
+var AMQPJWTValidationConsumer = "auth.validation.consumer"

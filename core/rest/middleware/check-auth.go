@@ -45,7 +45,7 @@ func CheckAuth(log *logger.Logger, conn *rmq.Connector) func(next http.Handler) 
 
 			body, err := conn.SimplePublishAndWaitResponse(r.Context(), &rmq.SimplePublisherConfig{
 				Exchange:  apiAuth.AMQPExchange,
-				Key:       apiAuth.AMQPKeyJWTValidation,
+				Key:       apiAuth.AMQPJWTValidationKey,
 				Mandatory: true,
 				Msg: amqp091.Publishing{
 					Body: dtoBytes,

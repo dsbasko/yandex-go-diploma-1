@@ -47,7 +47,7 @@ func RunController(
 	routes := handler.Routes()
 	for _, route := range routes {
 		for handle := range route.Handlers {
-			log.Debugf("Mapped [%v] %v route", handle, route.Pattern)
+			log.Debugf("mapped [%v] %v route", handle, route.Pattern)
 		}
 	}
 

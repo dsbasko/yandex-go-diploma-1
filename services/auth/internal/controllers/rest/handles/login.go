@@ -9,7 +9,7 @@ import (
 )
 
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
-	var dto api.AuthRequestV1
+	var dto api.LoginRequestV1
 	defer r.Body.Close()
 
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {

@@ -7,6 +7,7 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	"github.com/dsbasko/yandex-go-diploma-1/services/notification/internal/config"
 	"github.com/dsbasko/yandex-go-diploma-1/services/notification/internal/controllers/rest"
+	"github.com/dsbasko/yandex-go-diploma-1/services/notification/internal/repositories"
 )
 
 func Run() error {
@@ -23,10 +24,15 @@ func Run() error {
 		return fmt.Errorf("logger.NewLogger: %w", err)
 	}
 
+	repo, err := repositories.NewRepository(ctx)
+	if err != nil {
+		return fmt.Errorf("repositories.NewRepository: %w", err)
+	}
+
 	// HTTP REST триггер
 	errRestCh := make(chan error)
 	go func() {
-		if err = rest.RunController(ctx, log); err != nil {
+		if err = rest.RunController(ctx, log, repo); err != nil {
 			errRestCh <- fmt.Errorf("rest.Run: %v", err)
 		}
 	}()

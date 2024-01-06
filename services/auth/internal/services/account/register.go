@@ -34,9 +34,6 @@ func (s *Service) Register(ctx context.Context, dto *api.RegisterRequestV1) (*ap
 	if err != nil {
 		return nil, fmt.Errorf("repo.Create: %w", err)
 	}
-	_ = createdUser
 
-	return &api.RegisterResponseV1{
-		UUID: createdUser.ID,
-	}, nil
+	return api.RegisterResponseV1FromEntity(createdUser), nil
 }

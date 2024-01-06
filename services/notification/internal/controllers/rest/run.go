@@ -8,14 +8,14 @@ import (
 	coreMiddleware "github.com/dsbasko/yandex-go-diploma-1/core/rest/middleware"
 	"github.com/dsbasko/yandex-go-diploma-1/services/notification/internal/config"
 	"github.com/dsbasko/yandex-go-diploma-1/services/notification/internal/controllers/rest/handles"
-
+	"github.com/dsbasko/yandex-go-diploma-1/services/notification/internal/interfaces"
 	"github.com/go-chi/chi/v5"
 )
 
-func RunController(ctx context.Context, log *logger.Logger) error {
+func RunController(ctx context.Context, log *logger.Logger, repo interfaces.Repository) error {
 	handler := chi.NewRouter()
 	coreMiddlewares := coreMiddleware.New(log)
-	h := handles.New(log)
+	h := handles.New(log, repo)
 
 	handler.Use(coreMiddlewares.RequestID)
 	handler.Use(coreMiddlewares.Logger)
@@ -27,7 +27,7 @@ func RunController(ctx context.Context, log *logger.Logger) error {
 	routes := handler.Routes()
 	for _, route := range routes {
 		for handle := range route.Handlers {
-			log.Debugf("Mapped [%v] %v route", handle, route.Pattern)
+			log.Debugf("mapped [%v] %v route", handle, route.Pattern)
 		}
 	}
 

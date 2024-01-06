@@ -108,5 +108,6 @@ func (c *Connector) SimpleConsume(
 		}
 	}()
 
+	c.log.Debugf("created rabbitmq consumer: %s", cfgConsume.Consumer)
 	return nil
 }

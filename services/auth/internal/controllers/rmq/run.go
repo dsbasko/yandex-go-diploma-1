@@ -1,4 +1,4 @@
-package amqp
+package rmq
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/core/logger"
 	"github.com/dsbasko/yandex-go-diploma-1/core/rmq"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/config"
-	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/controllers/amqp/consumers"
+	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/controllers/rmq/consumers"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/internal/services/jwt"
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 )

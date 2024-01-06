@@ -47,7 +47,5 @@ func (s *Service) ChangePassword(
 		return nil, fmt.Errorf("repo.UpdateOnce: %w", err)
 	}
 
-	return &api.ChangePasswordResponseV1{
-		UUID: response.ID,
-	}, nil
+	return api.ChangePasswordResponseV1FromEntity(response), nil
 }

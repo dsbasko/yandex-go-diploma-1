@@ -19,3 +19,9 @@ services:
       dockerfile: ./deploy/docker/psql.Dockerfile
     ports:
       - "${NOTIFICATION_PSQL_PORT}:${NOTIFICATION_PSQL_PORT}"
+
+  notification_db_migrator:
+    restart: on-failure
+    build:
+      context: ../../
+      dockerfile: ./deploy/docker/migrator.Dockerfile

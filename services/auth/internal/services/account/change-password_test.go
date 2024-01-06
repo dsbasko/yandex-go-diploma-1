@@ -37,7 +37,7 @@ func TestService_ChangePassword(t *testing.T) {
 				OldPassword: "old_password",
 				NewPassword: "new_password",
 			},
-			wantRes: &api.ChangePasswordResponseV1{UUID: "42"},
+			wantRes: &api.ChangePasswordResponseV1{ID: "42"},
 			wantErr: nil,
 			mockConfig: func() {
 				repo.EXPECT().FindByID(gomock.Any(), gomock.Any()).Return(&entities.RepositoryAccountEntity{ID: "42", Password: passHash}, nil)
@@ -50,7 +50,7 @@ func TestService_ChangePassword(t *testing.T) {
 				OldPassword: "old_password",
 				NewPassword: "pass",
 			},
-			wantRes:    &api.ChangePasswordResponseV1{UUID: "42"},
+			wantRes:    &api.ChangePasswordResponseV1{ID: "42"},
 			wantErr:    ErrPasswordMinLength,
 			mockConfig: func() {},
 		},
@@ -60,7 +60,7 @@ func TestService_ChangePassword(t *testing.T) {
 				OldPassword: "old_password",
 				NewPassword: strings.Repeat("new_password", 42),
 			},
-			wantRes:    &api.ChangePasswordResponseV1{UUID: "42"},
+			wantRes:    &api.ChangePasswordResponseV1{ID: "42"},
 			wantErr:    ErrPasswordMaxLength,
 			mockConfig: func() {},
 		},
@@ -70,7 +70,7 @@ func TestService_ChangePassword(t *testing.T) {
 				OldPassword: "old_password",
 				NewPassword: "new_password",
 			},
-			wantRes: &api.ChangePasswordResponseV1{UUID: "42"},
+			wantRes: &api.ChangePasswordResponseV1{ID: "42"},
 			wantErr: errors.New("not found"),
 			mockConfig: func() {
 				repo.EXPECT().FindByID(gomock.Any(), gomock.Any()).Return(nil, errors.New("not found"))
@@ -82,7 +82,7 @@ func TestService_ChangePassword(t *testing.T) {
 				OldPassword: "old_password2",
 				NewPassword: "new_password",
 			},
-			wantRes: &api.ChangePasswordResponseV1{UUID: "42"},
+			wantRes: &api.ChangePasswordResponseV1{ID: "42"},
 			wantErr: bcrypt.ErrMismatchedHashAndPassword,
 			mockConfig: func() {
 				repo.EXPECT().FindByID(gomock.Any(), gomock.Any()).Return(

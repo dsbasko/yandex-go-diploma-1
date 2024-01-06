@@ -15,12 +15,16 @@ func (r *Repository) Create(
 	ctx context.Context,
 	dto *api.CreateTaskRequestV1,
 ) (*entities.RepositoryTaskEntity, error) {
-	dtoKeys, dtoValues, err := structs.ToKeysAndValues(dto, true, &[]string{"id"})
+	dtoKeys, dtoValues, err := structs.ToKeysAndValues(dto, true, &[]string{"id", "notifications"})
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
 
-	entityKeys, _, err := structs.ToKeysAndValues(entities.RepositoryTaskEntity{}, false, nil)
+	entityKeys, _, err := structs.ToKeysAndValues(
+		entities.RepositoryTaskEntity{},
+		false,
+		&[]string{"notifications"},
+	)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}

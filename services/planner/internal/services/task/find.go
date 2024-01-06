@@ -33,16 +33,7 @@ func (s *Service) FindByID(
 		return nil, nil
 	}
 
-	return &api.GetTaskResponseV1{
-		ID:          resp.ID,
-		UserID:      resp.UserID,
-		Name:        resp.Name,
-		Description: resp.Description,
-		DueDate:     resp.DueDate,
-		IsArchive:   resp.IsArchive,
-		CreatedAt:   resp.CreatedAt,
-		UpdatedAt:   resp.UpdatedAt,
-	}, nil
+	return api.GetTaskResponseV1FromEntity(*resp), nil
 }
 
 func (s *Service) FindToday(ctx context.Context, userID string) (*api.GetTasksResponseV1, error) {
@@ -73,16 +64,8 @@ func (s *Service) FindToday(ctx context.Context, userID string) (*api.GetTasksRe
 
 	var response []api.GetTaskResponseV1
 	for _, resp := range *repoResponse {
-		response = append(response, api.GetTaskResponseV1{
-			ID:          resp.ID,
-			UserID:      resp.UserID,
-			Name:        resp.Name,
-			Description: resp.Description,
-			DueDate:     resp.DueDate,
-			IsArchive:   resp.IsArchive,
-			CreatedAt:   resp.CreatedAt,
-			UpdatedAt:   resp.UpdatedAt,
-		})
+		respEntity := api.GetTaskResponseV1FromEntity(resp)
+		response = append(response, *respEntity)
 	}
 
 	return &api.GetTasksResponseV1{
@@ -121,16 +104,8 @@ func (s *Service) FindWeek(ctx context.Context, userID string) (*api.GetTasksRes
 
 	var response []api.GetTaskResponseV1
 	for _, resp := range *repoResponse {
-		response = append(response, api.GetTaskResponseV1{
-			ID:          resp.ID,
-			UserID:      resp.UserID,
-			Name:        resp.Name,
-			Description: resp.Description,
-			DueDate:     resp.DueDate,
-			IsArchive:   resp.IsArchive,
-			CreatedAt:   resp.CreatedAt,
-			UpdatedAt:   resp.UpdatedAt,
-		})
+		respEntity := api.GetTaskResponseV1FromEntity(resp)
+		response = append(response, *respEntity)
 	}
 
 	return &api.GetTasksResponseV1{
@@ -164,16 +139,8 @@ func (s *Service) FindUndated(ctx context.Context, userID string) (*api.GetTasks
 
 	var response []api.GetTaskResponseV1
 	for _, resp := range *repoResponse {
-		response = append(response, api.GetTaskResponseV1{
-			ID:          resp.ID,
-			UserID:      resp.UserID,
-			Name:        resp.Name,
-			Description: resp.Description,
-			DueDate:     resp.DueDate,
-			IsArchive:   resp.IsArchive,
-			CreatedAt:   resp.CreatedAt,
-			UpdatedAt:   resp.UpdatedAt,
-		})
+		respEntity := api.GetTaskResponseV1FromEntity(resp)
+		response = append(response, *respEntity)
 	}
 
 	return &api.GetTasksResponseV1{
@@ -208,16 +175,8 @@ func (s *Service) FindOverdue(ctx context.Context, userID string) (*api.GetTasks
 
 	var response []api.GetTaskResponseV1
 	for _, resp := range *repoResponse {
-		response = append(response, api.GetTaskResponseV1{
-			ID:          resp.ID,
-			UserID:      resp.UserID,
-			Name:        resp.Name,
-			Description: resp.Description,
-			DueDate:     resp.DueDate,
-			IsArchive:   resp.IsArchive,
-			CreatedAt:   resp.CreatedAt,
-			UpdatedAt:   resp.UpdatedAt,
-		})
+		respEntity := api.GetTaskResponseV1FromEntity(resp)
+		response = append(response, *respEntity)
 	}
 
 	return &api.GetTasksResponseV1{
@@ -251,16 +210,8 @@ func (s *Service) FindArchive(ctx context.Context, userID string) (*api.GetTasks
 
 	var response []api.GetTaskResponseV1
 	for _, resp := range *repoResponse {
-		response = append(response, api.GetTaskResponseV1{
-			ID:          resp.ID,
-			UserID:      resp.UserID,
-			Name:        resp.Name,
-			Description: resp.Description,
-			DueDate:     resp.DueDate,
-			IsArchive:   resp.IsArchive,
-			CreatedAt:   resp.CreatedAt,
-			UpdatedAt:   resp.UpdatedAt,
-		})
+		respEntity := api.GetTaskResponseV1FromEntity(resp)
+		response = append(response, *respEntity)
 	}
 
 	return &api.GetTasksResponseV1{

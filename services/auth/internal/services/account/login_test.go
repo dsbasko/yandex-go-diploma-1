@@ -24,18 +24,18 @@ func TestService_Login(t *testing.T) {
 
 	tests := []struct {
 		name       string
-		dto        *api.AuthRequestV1
-		wantRes    *api.AuthResponseV1
+		dto        *api.LoginRequestV1
+		wantRes    *api.LoginResponseV1
 		wantErr    error
 		mockConfig func()
 	}{
 		{
 			name: "Success",
-			dto: &api.AuthRequestV1{
+			dto: &api.LoginRequestV1{
 				Username: "username",
 				Password: "password",
 			},
-			wantRes: &api.AuthResponseV1{UUID: "42", Token: "42"},
+			wantRes: &api.LoginResponseV1{UUID: "42", Token: "42"},
 			wantErr: nil,
 			mockConfig: func() {
 				repo.EXPECT().
@@ -52,7 +52,7 @@ func TestService_Login(t *testing.T) {
 		},
 		{
 			name: "User Not Found",
-			dto: &api.AuthRequestV1{
+			dto: &api.LoginRequestV1{
 				Username: "username",
 				Password: "password",
 			},
@@ -64,7 +64,7 @@ func TestService_Login(t *testing.T) {
 		},
 		{
 			name: "Password Not Valid",
-			dto: &api.AuthRequestV1{
+			dto: &api.LoginRequestV1{
 				Username: "username",
 				Password: "password2",
 			},

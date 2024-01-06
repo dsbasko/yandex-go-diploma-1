@@ -17,15 +17,19 @@ func Validation(ctx context.Context, mu *sync.Mutex, log *logger.Logger, jwtServ
 	var request api.JWTValidationRequestV1
 	var response api.JWTValidationResponseV1
 	var replyMsg amqp091.Publishing
-	mu.Lock()
 
 	replyFn := func(msg amqp091.Delivery) {
+		mu.Lock()
 		defer func() {
 			request = api.JWTValidationRequestV1{}
 			response = api.JWTValidationResponseV1{}
 			replyMsg = amqp091.Publishing{}
 			mu.Unlock()
 		}()
+
+		if msg.ReplyTo == "" {
+			return
+		}
 
 		body, err := json.Marshal(response)
 		if err != nil {
@@ -62,9 +66,9 @@ func Validation(ctx context.Context, mu *sync.Mutex, log *logger.Logger, jwtServ
 
 	err := conn.SimpleConsume(ctx, &rmq.SimpleConsumeConfig{
 		Exchange:  api.AMQPExchange,
-		Queue:     api.AMQPQueueJWTValidation,
-		Key:       api.AMQPKeyJWTValidation,
-		Consumer:  "auth.validation.consumer",
+		Queue:     api.AMQPJWTValidationQueue,
+		Key:       api.AMQPJWTValidationKey,
+		Consumer:  api.AMQPJWTValidationConsumer,
 		PullMsgFn: pullMsgFn,
 	})
 	if err != nil {

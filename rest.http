@@ -35,6 +35,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDM2ODIzO
 
 
 
+
+
 ### [planner]/ping Проверка доступности сервиса
 GET http://localhost/planner/ping
 
@@ -46,7 +48,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1M
 {
   "name": "Task 1",
   "description": "Description task 1",
-  "due_date": "2024-01-01T12:30:00Z"
+  "due_date": "2024-01-01T12:30:00Z",
 }
 
 ### [planner]/{id} Получение задачи по ID
@@ -104,3 +106,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1M
 ### [planner]/archive Получение задач из архиве
 GET http://localhost/planner/archive
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQzNTM1MDYsImlhdCI6MTcwNDM1MjkwNiwiSldUUGF5bG9hZCI6eyJ1c2VyX2lkIjoiM2M4NWRkYjUtYWJkZS00MzUyLTliYzYtMmQzYTRmMzYzOGUzIiwidXNlcm5hbWUiOiJsb2dpbiIsImZpcnN0X25hbWUiOiJmaXJzdCBuYW1lIiwibGFzdF9uYW1lIjoibGFzdCBuYW1lIn19.qnuR_kgHPpEWc_tPSKPEluTjN6zTCsU2NgWxLWFT1Ng
+
+
+
+
+
+
+
+### [notification]/ping Проверка доступности сервиса
+GET http://localhost/notification/ping

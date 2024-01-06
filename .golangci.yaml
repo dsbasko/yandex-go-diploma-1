@@ -27,6 +27,7 @@ linters-settings:
       - whyNoLint
       - unnamedResult
       - rangeValCopy
+      - hugeParam
   gocyclo:
     min-complexity: 15
   gofmt:

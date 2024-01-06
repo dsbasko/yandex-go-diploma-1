@@ -5,6 +5,7 @@ go 1.21
 require (
 	github.com/Masterminds/squirrel v1.5.4
 	github.com/dsbasko/yandex-go-diploma-1/core v1.0.0
+	github.com/dsbasko/yandex-go-diploma-1/services/notification v0.0.0-00010101000000-000000000000
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/golang/mock v1.6.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0

@@ -27,8 +27,5 @@ func (s *Service) Create(ctx context.Context, dto *api.CreateTaskRequestV1) (*ap
 		return nil, fmt.Errorf("repo.CreateOnce: %w", err)
 	}
 
-	return &api.CreateTaskResponseV1{
-		ID:   response.ID,
-		Name: response.Name,
-	}, nil
+	return api.CreateTaskResponseV1FromEntity(response), nil
 }

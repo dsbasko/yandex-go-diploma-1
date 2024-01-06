@@ -8,7 +8,7 @@ import (
 	"github.com/dsbasko/yandex-go-diploma-1/services/auth/pkg/api"
 )
 
-func (s *Service) Login(ctx context.Context, dto *api.AuthRequestV1) (*api.AuthResponseV1, error) {
+func (s *Service) Login(ctx context.Context, dto *api.LoginRequestV1) (*api.LoginResponseV1, error) {
 	if ctx == nil || dto == nil {
 		return nil, ErrArgumentsNotFilled
 	}
@@ -28,7 +28,7 @@ func (s *Service) Login(ctx context.Context, dto *api.AuthRequestV1) (*api.AuthR
 		return nil, fmt.Errorf("jwtService.Generate: %w", err)
 	}
 
-	return &api.AuthResponseV1{
+	return &api.LoginResponseV1{
 		UUID:  foundUser.ID,
 		Token: token,
 	}, nil

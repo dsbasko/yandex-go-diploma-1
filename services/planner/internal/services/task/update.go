@@ -29,16 +29,7 @@ func (s *Service) UpdateOnce(ctx context.Context, userID, id string, dto *api.Up
 		return nil, fmt.Errorf("repo.UpdateOnce: %w", err)
 	}
 
-	return &api.UpdateTaskResponseV1{
-		ID:          response.ID,
-		UserID:      response.UserID,
-		Name:        response.Name,
-		Description: response.Description,
-		DueDate:     response.DueDate,
-		IsArchive:   response.IsArchive,
-		CreatedAt:   response.CreatedAt,
-		UpdatedAt:   response.UpdatedAt,
-	}, nil
+	return api.UpdateTaskResponseV1FromEntity(response), nil
 }
 
 func (s *Service) UpdateIsArchive(
@@ -63,16 +54,7 @@ func (s *Service) UpdateIsArchive(
 		return nil, fmt.Errorf("repo.UpdateOnce: %w", err)
 	}
 
-	return &api.ChangeIsArchiveResponseV1{
-		ID:          response.ID,
-		UserID:      response.UserID,
-		Name:        response.Name,
-		Description: response.Description,
-		DueDate:     response.DueDate,
-		IsArchive:   response.IsArchive,
-		CreatedAt:   response.CreatedAt,
-		UpdatedAt:   response.UpdatedAt,
-	}, nil
+	return api.ChangeIsArchiveResponseV1FromEntity(response), nil
 }
 
 func (s *Service) UpdateDueDate(
@@ -97,14 +79,5 @@ func (s *Service) UpdateDueDate(
 		return nil, fmt.Errorf("repo.UpdateOnce: %w", err)
 	}
 
-	return &api.ChangeDueDateResponseV1{
-		ID:          response.ID,
-		UserID:      response.UserID,
-		Name:        response.Name,
-		Description: response.Description,
-		DueDate:     response.DueDate,
-		IsArchive:   response.IsArchive,
-		CreatedAt:   response.CreatedAt,
-		UpdatedAt:   response.UpdatedAt,
-	}, nil
+	return api.ChangeDueDateResponseV1FromEntity(response), nil
 }
