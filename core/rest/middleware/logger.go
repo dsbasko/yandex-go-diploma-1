@@ -3,7 +3,6 @@ package middleware
 import (
 	"bytes"
 	"compress/gzip"
-	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -62,7 +61,7 @@ func (m *Middleware) Logger(next http.Handler) http.Handler {
 					reader, err := gzip.NewReader(buf)
 					if err == nil {
 						defer reader.Close()
-						if _, err = io.CopyN(responseBuf, reader, MaxResponseSize); err != nil {
+						if _, err = io.Copy(responseBuf, reader); err != nil { //nolint:gosec
 							next.ServeHTTP(ww, r)
 						}
 					}
@@ -72,7 +71,6 @@ func (m *Middleware) Logger(next http.Handler) http.Handler {
 					}
 				}
 
-				fmt.Println("responseBuf.String()")
 				args = append(args, "response_body", responseBuf.String())
 			} else {
 				args = append(args, "response_body", "null")
