@@ -3,7 +3,6 @@ WORKDIR /app
 
 COPY ./services/auth ./
 COPY ./core /core
-COPY ./services/notification /services/notification
 COPY ./services/planner /services/planner
 
 RUN go mod download

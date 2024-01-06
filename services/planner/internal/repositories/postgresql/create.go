@@ -15,7 +15,7 @@ func (r *Repository) Create(
 	ctx context.Context,
 	dto *api.CreateTaskRequestV1,
 ) (*entities.RepositoryTaskEntity, error) {
-	dtoKeys, dtoValues, err := structs.ToKeysAndValues(dto, true, &[]string{"id", "notifications"})
+	dtoKeys, dtoValues, err := structs.ToKeysAndValues(dto, true, &[]string{"id"})
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)
 	}
@@ -23,7 +23,7 @@ func (r *Repository) Create(
 	entityKeys, _, err := structs.ToKeysAndValues(
 		entities.RepositoryTaskEntity{},
 		false,
-		&[]string{"notifications"},
+		nil,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("structs.ToKeysAndValues: %w", err)

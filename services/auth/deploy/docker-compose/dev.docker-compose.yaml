@@ -9,7 +9,6 @@ services:
     volumes:
       - ../../:/app
       - ../../../../core:/core
-      - ../../../notification:/services/notification
       - ../../../planner:/services/planner
 
   auth_db:

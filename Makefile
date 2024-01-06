@@ -1,13 +1,13 @@
-.PHONY: start-prod start-dev stop lint
+.PHONY: start-prod start-dev stop lint install-deps
 .SILENT:
 
-run-dev: stop
+start-dev: stop
 	@ENV="dev" docker compose \
 		-f deploy/docker-compose/docker-compose.yaml \
 		--env-file env/.env \
 		up --build -d
 
-run-prod: stop
+start-prod: stop
 	@ENV="prod" docker compose \
 		-f deploy/docker-compose/docker-compose.yaml \
 		--env-file env/.env \

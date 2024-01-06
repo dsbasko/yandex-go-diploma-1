@@ -4,7 +4,6 @@ WORKDIR /app
 COPY ./services/planner ./
 COPY ./core /core
 COPY ./services/auth /services/auth
-COPY ./services/notification /services/notification
 
 RUN go mod download
 RUN go build -o ./bin/planner-service ./cmd/planner-service/main.go

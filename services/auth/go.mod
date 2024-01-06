@@ -37,6 +37,4 @@ require (
 
 replace github.com/dsbasko/yandex-go-diploma-1/core => ../../core
 
-replace github.com/dsbasko/yandex-go-diploma-1/services/notification => ../../services/notification
-
 replace github.com/dsbasko/yandex-go-diploma-1/services/planner => ../../services/planner
