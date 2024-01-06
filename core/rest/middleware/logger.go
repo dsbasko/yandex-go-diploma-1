@@ -2,12 +2,17 @@ package middleware
 
 import (
 	"bytes"
+	"compress/gzip"
+	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 
 	middlewareChi "github.com/go-chi/chi/v5/middleware"
 )
+
+const MaxResponseSize int64 = 1024 * 1024 // 1МБ
 
 type responseLogger struct {
 	http.ResponseWriter
@@ -51,8 +56,26 @@ func (m *Middleware) Logger(next http.Handler) http.Handler {
 			}...)
 
 			if ww.Status() >= http.StatusOK && ww.Status() < http.StatusBadRequest {
-				responseBody := buf.String()
-				args = append(args, "response_body", responseBody)
+				responseBuf := bytes.NewBuffer(nil)
+
+				if strings.Contains(ww.Header().Get("Content-Encoding"), "gzip") {
+					reader, err := gzip.NewReader(buf)
+					if err == nil {
+						defer reader.Close()
+						if _, err = io.CopyN(responseBuf, reader, MaxResponseSize); err != nil {
+							next.ServeHTTP(ww, r)
+						}
+					}
+				} else {
+					if _, err := io.Copy(responseBuf, buf); err != nil {
+						next.ServeHTTP(ww, r)
+					}
+				}
+
+				fmt.Println("responseBuf.String()")
+				args = append(args, "response_body", responseBuf.String())
+			} else {
+				args = append(args, "response_body", "null")
 			}
 
 			m.log.Infow("request", args...)
